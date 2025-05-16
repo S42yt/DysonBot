@@ -1,9 +1,11 @@
 {
-  token = "$BOT_TOKEN"; 
-  clientId = "$CLIENT_ID"; 
+  token = "$BOT_TOKEN";
+  clientId = "$CLIENT_ID";
   guildId = "$GUILD_ID";
-  
-  debug = true;
+  connectionString = "$MONGODB_URI";
+  dbName = "$DB_NAME";
+
+  debug = false;
   
   modules = [
     {
@@ -15,12 +17,13 @@
         status = true;
       };
       events = {
+        rpc = true;
       };
       env = {
       };
       options = {
       };
-    }
+    },
     {
       name = "admin";
       enabled = true;
@@ -29,6 +32,21 @@
       };
       events = { };
       env = { };
+    },
+        {
+      name = "abmelden";
+      enabled = true;
+      commands = {
+        abmelden = true;
+        anmelden = true;
+        abmeldungen = true;
+      };
+      events = { 
+        abmelden = true;
+      };
+      env = {
+        role = "$CLAN_ROLE";
+       };
     }
    ];
 }

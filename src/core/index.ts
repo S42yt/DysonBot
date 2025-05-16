@@ -7,4 +7,15 @@ import EventHandler from './event/eventHandler';
 import Module from './module/module';
 import ModuleHandler from './module/moduleHandler';
 
-export { Command, CommandHandler, Event, EventHandler, Module, ModuleHandler };
+import { DatabaseHandler, BaseSchema } from './database';
+
+export {
+  Command,
+  CommandHandler,
+  Event,
+  EventHandler,
+  Module,
+  ModuleHandler,
+  DatabaseHandler,
+  BaseSchema,
+};

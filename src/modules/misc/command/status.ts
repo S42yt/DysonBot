@@ -1,8 +1,9 @@
 import { CommandInteraction, version as discordJsVersion } from 'discord.js';
-import { Command } from '../../../core';
+import { Command, DatabaseHandler } from '../../../core';
 import { Embed } from '../../../types/embed';
 import os from 'os';
 import process from 'process';
+import Logger from '../../../utils/logger';
 
 export default new Command(
   {
@@ -10,6 +11,8 @@ export default new Command(
     description: 'Shows bot status and system information',
   },
   async (interaction: CommandInteraction) => {
+    await interaction.deferReply();
+
     const client = interaction.client;
     const uptime = formatUptime(client.uptime || 0);
 
@@ -20,6 +23,36 @@ export default new Command(
     const platform = os.platform();
     const cpuLoad = os.loadavg()[0].toFixed(2);
     const cpuCores = os.cpus().length;
+
+    let dbStatus = '❌ Not connected';
+    let dbLatency = 'N/A';
+    let dbVersion = 'N/A';
+
+    try {
+      const dbHandler = DatabaseHandler.getInstance();
+
+      const dbStart = Date.now();
+
+      if (!dbHandler.connection.connections[0]?.readyState) {
+        await dbHandler.connect();
+      }
+
+      if (dbHandler.connection.connections[0]?.readyState === 1) {
+        const db = dbHandler.connection.connections[0].db;
+        if (db) {
+          await db.admin().ping();
+          const dbEnd = Date.now();
+          dbLatency = `${dbEnd - dbStart}ms`;
+          dbStatus = '✅ Connected';
+
+          const buildInfo = await db.admin().buildInfo();
+          dbVersion = buildInfo.version || 'Unknown';
+        }
+      }
+    } catch (error) {
+      Logger.error('Database status error:', error);
+      dbStatus = `❌ Error: ${error instanceof Error ? error.message : 'Unknown error'}`;
+    }
 
     const embed = new Embed({
       title: '🤖 Bot Status',
@@ -60,10 +93,15 @@ export default new Command(
           value: `${client.ws.ping}ms`,
           inline: true,
         },
+        {
+          name: '💾 Database',
+          value: `Status: ${dbStatus}\nLatency: ${dbLatency}\nVersion: ${dbVersion}`,
+          inline: false,
+        },
       ],
     });
 
-    await interaction.reply({ embeds: [embed] });
+    await interaction.editReply({ embeds: [embed] });
   },
   'misc'
 );

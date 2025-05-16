@@ -11,6 +11,8 @@ export interface BotConfig {
   token: string;
   clientId: string;
   guildId: string;
+  connectionString: string;
+  dbName: string;
   modules: ConfigModule[];
   debug?: boolean;
 }
