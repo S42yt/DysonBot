@@ -10,17 +10,17 @@ export default new Event(
         activities: [
           {
             name: 'Spendet dem Dyson Clan',
-            type: ActivityType.Playing
-          }
+            type: ActivityType.Playing,
+          },
         ],
-        status: 'online'
+        status: 'online',
       });
-      
+
       Logger.info('Bot presence (RPC) has been set successfully');
     } catch (error) {
       Logger.error('Failed to set bot presence:', error);
     }
   },
   'misc',
-  true 
+  true
 );

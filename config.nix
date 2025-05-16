@@ -19,10 +19,7 @@
       events = {
         rpc = true;
       };
-      env = {
-      };
-      options = {
-      };
+      env = { };
     },
     {
       name = "admin";
@@ -33,7 +30,7 @@
       events = { };
       env = { };
     },
-        {
+    {
       name = "abmelden";
       enabled = true;
       commands = {
@@ -46,7 +43,20 @@
       };
       env = {
         role = "$CLAN_ROLE";
-       };
+      };
+    },
+    {
+      name = "welcome";
+      enabled = true;
+      commands = { };
+      events = {
+        welcome = true;
+        joinrole = true;
+      };
+      env = {
+        welcomeChannel = "$WELCOME_CHANNEL";
+        joinRole = "$JOIN_ROLE";
+      };
     }
-   ];
+  ];
 }
