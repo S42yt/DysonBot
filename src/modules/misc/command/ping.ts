@@ -9,14 +9,13 @@ export default new Command(
     description: 'Replies with the bot latency and database status',
   },
   async (interaction: CommandInteraction) => {
+    const startTime = Date.now();
+
     const ping = interaction.client.ws.ping;
 
-    const sent = await interaction.reply({
-      content: 'Pinging...',
-      fetchReply: true,
-    });
+    await interaction.deferReply();
 
-    const roundtrip = sent.createdTimestamp - interaction.createdTimestamp;
+    const roundtrip = Date.now() - startTime;
 
     let dbStatus = '❌ Not connected';
     let dbLatency = 'N/A';
@@ -26,11 +25,11 @@ export default new Command(
 
       const dbStart = Date.now();
 
-      if (!dbHandler.connection.connections[0]?.readyState) {
+      if (!dbHandler.connection?.connections[0]?.readyState) {
         await dbHandler.connect();
       }
 
-      if (dbHandler.connection.connections[0]?.readyState === 1) {
+      if (dbHandler.connection?.connections[0]?.readyState === 1) {
         const db = dbHandler.connection.connections[0].db;
         if (db) {
           await db.admin().ping();
@@ -54,7 +53,7 @@ export default new Command(
       },
     });
 
-    await interaction.editReply({ content: null, embeds: [embed] });
+    await interaction.editReply({ embeds: [embed] });
   },
   'misc'
 );

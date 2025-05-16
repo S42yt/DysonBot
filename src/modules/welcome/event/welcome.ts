@@ -38,7 +38,7 @@ export default new Event(
       const embed = new Embed({
         title: `Willkommen auf ${member.guild.name} Discord!!!`,
         description: `Hey <@${member.id}>, schön, dass du bei uns bist! Wenn du ein Clan Mitglied bist einmal bei NurBirkenBaum melden!!!.`,
-        color: '#FF69B4',
+        color: '#C593AE',
         thumbnail: member.user.displayAvatarURL({ size: 128 }),
         image: 'attachment://welcome.png',
         footer: {

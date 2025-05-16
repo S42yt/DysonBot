@@ -26,6 +26,7 @@
       enabled = true;
       commands = {
         reload = true;
+        say = true;
       };
       events = { };
       env = { };
