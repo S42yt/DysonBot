@@ -1,0 +1,151 @@
+import { readFileSync } from 'fs';
+import { join } from 'path';
+import { BotConfig, ConfigModule } from '../types/config';
+import Logger from './logger';
+
+class ConfigHandler {
+  private static instance: ConfigHandler;
+  private config: BotConfig | null = null;
+  private configPath: string;
+
+  private constructor() {
+    this.configPath = join(process.cwd(), 'config.nix');
+  }
+
+  public static getInstance(): ConfigHandler {
+    if (!ConfigHandler.instance) {
+      ConfigHandler.instance = new ConfigHandler();
+    }
+    return ConfigHandler.instance;
+  }
+
+  /**
+   * Simple Nix-like config parser
+   * This is a basic implementation that parses our specific format
+   */
+  private parseNixConfig(content: string): BotConfig {
+    // Replace environment variables
+    Object.entries(process.env).forEach(([key, value]) => {
+      content = content.replace(new RegExp(`\\$${key}`, 'g'), value || '');
+    });
+
+    // Very basic parser for our specific nix format
+    // In a real implementation, you'd use a proper nix parser
+    try {
+      // Convert to something JSON-like
+      const jsonLike = content
+        .replace(/(\w+)\s*=/g, '"$1":') // Convert key = value to "key": value
+        .replace(/;/g, ',') // Replace semicolons with commas
+        .replace(/\$\{([^}]+)\}/g, '"$1"') // Replace ${var} with "var"
+        .replace(/#.*$/gm, '') // Remove comments
+        .replace(/,(\s*[}\]])/g, '$1'); // Remove trailing commas
+
+      // Wrap in curly braces if needed
+      const jsonStr = jsonLike.trim().startsWith('{') ? jsonLike : `{${jsonLike}}`;
+      return JSON.parse(jsonStr) as BotConfig;
+    } catch (error) {
+      Logger.error('Error parsing nix config:', error);
+      throw new Error('Failed to parse config file');
+    }
+  }
+
+  public loadConfig(forceReload = false): BotConfig {
+    try {
+      if (this.config && !forceReload) {
+        return this.config;
+      }
+
+      const nixContent = readFileSync(this.configPath, 'utf-8');
+      this.config = this.parseNixConfig(nixContent);
+      
+      Logger.info(`Config ${forceReload ? 're' : ''}loaded successfully`);
+      return this.config;
+    } catch (error) {
+      Logger.error('Failed to load config:', error);
+      throw new Error('Failed to load config');
+    }
+  }
+
+  public getConfig(forceReload = false): BotConfig {
+    if (!this.config || forceReload) {
+      return this.loadConfig(forceReload);
+    }
+    return this.config;
+  }
+  
+  public reloadConfig(): BotConfig {
+    return this.getConfig(true);
+  }
+
+  public getModuleConfig(moduleName: string): ConfigModule & {
+    commands: Record<string, boolean>;
+    events: Record<string, boolean>;
+    env: Record<string, string>;
+  } {
+    const config = this.getConfig();
+    const moduleConfig = config.modules.find(m => m.name === moduleName);
+    
+    if (!moduleConfig) {
+      Logger.warn(`Module config not found for ${moduleName}`);
+      return { 
+        name: moduleName,
+        enabled: false, 
+        commands: {}, 
+        events: {}, 
+        env: {} 
+      };
+    }
+    
+    // Ensure the module has the required properties with defaults
+    return {
+      name: moduleConfig.name,
+      enabled: moduleConfig.enabled ?? false,
+      commands: moduleConfig.commands ?? {},
+      events: moduleConfig.events ?? {},
+      env: moduleConfig.env ?? {},
+      options: moduleConfig.options ?? {}
+    };
+  }
+
+  public isModuleEnabled(moduleName: string): boolean {
+    const moduleConfig = this.getModuleConfig(moduleName);
+    return moduleConfig.enabled;
+  }
+  
+  public isCommandEnabled(moduleName: string, commandName: string): boolean {
+    const moduleConfig = this.getModuleConfig(moduleName);
+    
+    // If module is disabled, all its commands are disabled
+    if (!moduleConfig.enabled) return false;
+    
+    // If command isn't specified in config, default to enabled
+    if (Object.keys(moduleConfig.commands).length === 0 || 
+        moduleConfig.commands[commandName] === undefined) {
+      return true;
+    }
+    
+    return !!moduleConfig.commands[commandName];
+  }
+  
+  public isEventEnabled(moduleName: string, eventName: string): boolean {
+    const moduleConfig = this.getModuleConfig(moduleName);
+    
+    // If module is disabled, all its events are disabled
+    if (!moduleConfig.enabled) return false;
+    
+    // If event isn't specified in config, default to enabled
+    if (Object.keys(moduleConfig.events).length === 0 || 
+        moduleConfig.events[eventName] === undefined) {
+      return true;
+    }
+    
+    return !!moduleConfig.events[eventName];
+  }
+  
+  public getModuleEnv(moduleName: string): Record<string, string> {
+    const moduleConfig = this.getModuleConfig(moduleName);
+    return moduleConfig.env || {};
+  }
+}
+
+export default ConfigHandler;
