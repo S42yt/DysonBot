@@ -1,32 +1,32 @@
-import { CommandInteraction, GuildMember, Guild, Role } from 'discord.js';
-import { Command } from '../../../core/index.js';
-import { Embed } from '../../../types/embed.js';
-import { MemberStatusModel } from '../schema/memberStatus.js';
-import Logger from '../../../utils/logger.js';
-import ConfigHandler from '../../../utils/configHandler.js';
-import { formatDuration } from '../../../utils/durationHandler.js';
+import { CommandInteraction, GuildMember, Guild, Role } from "discord.js";
+import { Command } from "../../../core/index.js";
+import { Embed } from "../../../types/embed.js";
+import { MemberStatusModel } from "../schema/memberStatus.js";
+import Logger from "../../../utils/logger.js";
+import ConfigHandler from "../../../utils/configHandler.js";
+import { formatDuration } from "../../../utils/durationHandler.js";
 
 export default new Command(
   {
-    name: 'abmeldungen',
-    description: 'Zeige alle Mitglieder mit ihrem aktuellen Status an',
+    name: "abmeldungen",
+    description: "Zeige alle Mitglieder mit ihrem aktuellen Status an",
   },
   async (interaction: CommandInteraction): Promise<void> => {
     try {
       const member = interaction.member as GuildMember;
       const guild = interaction.guild as Guild;
       const configHandler = ConfigHandler.getInstance();
-      const moduleEnv = configHandler.getModuleEnv('abmelden');
+      const moduleEnv = configHandler.getModuleEnv("abmelden");
       const clanRoleId = moduleEnv.role;
 
       if (!member.roles.cache.has(clanRoleId)) {
         await interaction.reply({
           embeds: [
             new Embed({
-              title: '❌ Fehlende Berechtigung',
+              title: "❌ Fehlende Berechtigung",
               description:
-                'Du hast nicht die erforderliche Rolle, um diesen Befehl zu verwenden.',
-              color: '#ED4245',
+                "Du hast nicht die erforderliche Rolle, um diesen Befehl zu verwenden.",
+              color: "#ED4245",
             }),
           ],
           ephemeral: true,
@@ -54,7 +54,7 @@ export default new Command(
 
       for (const [userId, guildMember] of clanMembers) {
         const status = statusMap.get(userId) || {
-          status: 'angemeldet',
+          status: "angemeldet",
           displayName: guildMember.displayName,
           username: guildMember.user.username,
         };
@@ -64,15 +64,15 @@ export default new Command(
             userId,
             displayName: guildMember.displayName,
             username: guildMember.user.username,
-            status: 'angemeldet',
+            status: "angemeldet",
           });
           await newStatus.save();
         }
 
-        if (status.status === 'abgemeldet' && status.endTime) {
+        if (status.status === "abgemeldet" && status.endTime) {
           const remainingTime = status.endTime.getTime() - now.getTime();
           const timeLeft =
-            remainingTime > 0 ? formatDuration(remainingTime) : 'Überfällig';
+            remainingTime > 0 ? formatDuration(remainingTime) : "Überfällig";
 
           abgemeldetFields.push({
             name: `${guildMember.displayName} (${guildMember.user.username})`,
@@ -82,7 +82,7 @@ export default new Command(
         } else {
           angemeldetFields.push({
             name: `${guildMember.displayName} (${guildMember.user.username})`,
-            value: 'Anwesend',
+            value: "Anwesend",
             inline: true,
           });
         }
@@ -95,9 +95,9 @@ export default new Command(
 
       embeds.push(
         new Embed({
-          title: '👥 Clan Mitglieder Status',
+          title: "👥 Clan Mitglieder Status",
           description: `Insgesamt: ${clanMembers.size} Mitglieder | 🟢 ${angemeldetFields.length} Anwesend | 🔴 ${abgemeldetFields.length} Abwesend`,
-          color: '#43B581',
+          color: "#43B581",
           timestamp: true,
         })
       );
@@ -108,10 +108,10 @@ export default new Command(
             new Embed({
               title:
                 i === 0
-                  ? '🔴 Abwesende Mitglieder'
-                  : '🔴 Abwesende Mitglieder (Fortsetzung)',
+                  ? "🔴 Abwesende Mitglieder"
+                  : "🔴 Abwesende Mitglieder (Fortsetzung)",
               fields: abgemeldetFields.slice(i, i + 25),
-              color: '#ED4245',
+              color: "#ED4245",
             })
           );
         }
@@ -123,10 +123,10 @@ export default new Command(
             new Embed({
               title:
                 i === 0
-                  ? '🟢 Anwesende Mitglieder'
-                  : '🟢 Anwesende Mitglieder (Fortsetzung)',
+                  ? "🟢 Anwesende Mitglieder"
+                  : "🟢 Anwesende Mitglieder (Fortsetzung)",
               fields: angemeldetFields.slice(i, i + 25),
-              color: '#43B581',
+              color: "#43B581",
             })
           );
         }
@@ -134,16 +134,16 @@ export default new Command(
 
       await interaction.editReply({ embeds: embeds.slice(0, 10) });
     } catch (error) {
-      Logger.error('Error in abmeldungen command:', error);
+      Logger.error("Error in abmeldungen command:", error);
 
       if (interaction.deferred) {
         await interaction.editReply({
           embeds: [
             new Embed({
-              title: '❌ Datenbankfehler',
+              title: "❌ Datenbankfehler",
               description:
-                'Ein Fehler ist aufgetreten. Bitte versuche es später erneut.',
-              color: '#ED4245',
+                "Ein Fehler ist aufgetreten. Bitte versuche es später erneut.",
+              color: "#ED4245",
             }),
           ],
         });
@@ -151,10 +151,10 @@ export default new Command(
         await interaction.reply({
           embeds: [
             new Embed({
-              title: '❌ Datenbankfehler',
+              title: "❌ Datenbankfehler",
               description:
-                'Ein Fehler ist aufgetreten. Bitte versuche es später erneut.',
-              color: '#ED4245',
+                "Ein Fehler ist aufgetreten. Bitte versuche es später erneut.",
+              color: "#ED4245",
             }),
           ],
           ephemeral: true,
@@ -162,5 +162,5 @@ export default new Command(
       }
     }
   },
-  'abmelden'
+  "abmelden"
 );

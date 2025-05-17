@@ -1,9 +1,9 @@
-import { Collection, REST, Routes } from 'discord.js';
-import { readdirSync } from 'fs';
-import path from 'path';
-import { BotClient, Command } from '../../types/discord.js';
-import Logger from '../../utils/logger.js';
-import ConfigHandler from '../../utils/configHandler.js';
+import { Collection, REST, Routes } from "discord.js";
+import { readdirSync } from "fs";
+import path from "path";
+import { BotClient, Command } from "../../types/discord.js";
+import Logger from "../../utils/logger.js";
+import ConfigHandler from "../../utils/configHandler.js";
 
 class CommandHandler {
   private client: BotClient;
@@ -58,7 +58,7 @@ class CommandHandler {
       return commands;
     }
 
-    const commandsDir = path.join(moduleDir, 'command');
+    const commandsDir = path.join(moduleDir, "command");
 
     try {
       if (!readdirSync(commandsDir, { withFileTypes: true }).length) {
@@ -66,7 +66,7 @@ class CommandHandler {
       }
 
       const commandFiles = readdirSync(commandsDir).filter(file =>
-        file.endsWith('.js')
+        file.endsWith(".js")
       );
 
       for (const file of commandFiles) {
@@ -91,21 +91,21 @@ class CommandHandler {
     const config = this.configHandler.getConfig();
 
     if (!config.token || !config.clientId || !config.guildId) {
-      throw new Error('Missing required config values');
+      throw new Error("Missing required config values");
     }
 
-    const rest = new REST({ version: '10' }).setToken(config.token);
+    const rest = new REST({ version: "10" }).setToken(config.token);
 
     const commands = Array.from(this.client.commands.values()).map(command => {
       return JSON.parse(
         JSON.stringify(command.data, (key, value) =>
-          typeof value === 'bigint' ? value.toString() : value
+          typeof value === "bigint" ? value.toString() : value
         )
       );
     });
 
     if (commands.length === 0) {
-      Logger.warn('No commands to register');
+      Logger.warn("No commands to register");
       return;
     }
 
@@ -119,7 +119,7 @@ class CommandHandler {
 
       Logger.info(`Successfully registered ${commands.length} commands`);
     } catch (error) {
-      Logger.error('Failed to register commands:', error);
+      Logger.error("Failed to register commands:", error);
       throw error;
     }
   }

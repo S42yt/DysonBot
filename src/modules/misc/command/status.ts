@@ -1,14 +1,14 @@
-import { CommandInteraction, version as discordJsVersion } from 'discord.js';
-import { Command, DatabaseHandler } from '../../../core/index.js';
-import { Embed } from '../../../types/embed.js';
-import os from 'os';
-import process from 'process';
-import Logger from '../../../utils/logger.js';
+import { CommandInteraction, version as discordJsVersion } from "discord.js";
+import { Command, DatabaseHandler } from "../../../core/index.js";
+import { Embed } from "../../../types/embed.js";
+import os from "os";
+import process from "process";
+import Logger from "../../../utils/logger.js";
 
 export default new Command(
   {
-    name: 'status',
-    description: 'Shows bot status and system information',
+    name: "status",
+    description: "Shows bot status and system information",
   },
   async (interaction: CommandInteraction) => {
     await interaction.deferReply();
@@ -24,9 +24,9 @@ export default new Command(
     const cpuLoad = os.loadavg()[0].toFixed(2);
     const cpuCores = os.cpus().length;
 
-    let dbStatus = '❌ Not connected';
-    let dbLatency = 'N/A';
-    let dbVersion = 'N/A';
+    let dbStatus = "❌ Not connected";
+    let dbLatency = "N/A";
+    let dbVersion = "N/A";
 
     try {
       const dbHandler = DatabaseHandler.getInstance();
@@ -43,20 +43,20 @@ export default new Command(
           await db.admin().ping();
           const dbEnd = Date.now();
           dbLatency = `${dbEnd - dbStart}ms`;
-          dbStatus = '✅ Connected';
+          dbStatus = "✅ Connected";
 
           const buildInfo = await db.admin().buildInfo();
-          dbVersion = buildInfo.version || 'Unknown';
+          dbVersion = buildInfo.version || "Unknown";
         }
       }
     } catch (error) {
-      Logger.error('Database status error:', error);
-      dbStatus = `❌ Error: ${error instanceof Error ? error.message : 'Unknown error'}`;
+      Logger.error("Database status error:", error);
+      dbStatus = `❌ Error: ${error instanceof Error ? error.message : "Unknown error"}`;
     }
 
     const embed = new Embed({
-      title: '🤖 Bot Status',
-      color: '#43B581',
+      title: "🤖 Bot Status",
+      color: "#43B581",
       thumbnail: client.user?.displayAvatarURL({ size: 256 }),
       footer: {
         text: `Discord.js v${discordJsVersion} | Node ${process.version}`,
@@ -64,37 +64,37 @@ export default new Command(
       timestamp: true,
       fields: [
         {
-          name: '⏱️ Uptime',
+          name: "⏱️ Uptime",
           value: uptime,
           inline: true,
         },
         {
-          name: '📊 Memory',
+          name: "📊 Memory",
           value: `${memoryUsedMB} MB / ${memoryTotalMB} MB`,
           inline: true,
         },
         {
-          name: '🖥️ System',
+          name: "🖥️ System",
           value: `${platform} | CPU Load: ${cpuLoad} | Cores: ${cpuCores}`,
           inline: false,
         },
         {
-          name: '🌐 Servers',
+          name: "🌐 Servers",
           value: client.guilds.cache.size.toString(),
           inline: true,
         },
         {
-          name: '👥 Users',
+          name: "👥 Users",
           value: client.users.cache.size.toString(),
           inline: true,
         },
         {
-          name: '🔌 Ping',
+          name: "🔌 Ping",
           value: `${client.ws.ping}ms`,
           inline: true,
         },
         {
-          name: '💾 Database',
+          name: "💾 Database",
           value: `Status: ${dbStatus}\nLatency: ${dbLatency}\nVersion: ${dbVersion}`,
           inline: false,
         },
@@ -103,7 +103,7 @@ export default new Command(
 
     await interaction.editReply({ embeds: [embed] });
   },
-  'misc'
+  "misc"
 );
 
 function formatUptime(ms: number): string {

@@ -5,7 +5,7 @@ import {
   Collection,
   CommandInteraction,
   CommandInteractionOptionResolver,
-} from 'discord.js';
+} from "discord.js";
 
 export interface SlashCommandOptions {
   name: string;

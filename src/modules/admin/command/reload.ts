@@ -2,22 +2,22 @@ import {
   CommandInteraction,
   PermissionFlagsBits,
   CommandInteractionOptionResolver,
-} from 'discord.js';
-import { Command, ModuleHandler } from '../../../core/index.js';
-import { Embed } from '../../../types/embed.js';
-import { BotClient } from '../../../types/discord.js';
-import ConfigHandler from '../../../utils/configHandler.js';
-import Logger from '../../../utils/logger.js';
+} from "discord.js";
+import { Command, ModuleHandler } from "../../../core/index.js";
+import { Embed } from "../../../types/embed.js";
+import { BotClient } from "../../../types/discord.js";
+import ConfigHandler from "../../../utils/configHandler.js";
+import Logger from "../../../utils/logger.js";
 
 export default new Command(
   {
-    name: 'reload',
-    description: 'Reload all modules and optionally configuration',
+    name: "reload",
+    description: "Reload all modules and optionally configuration",
     defaultMemberPermissions: PermissionFlagsBits.Administrator,
     options: [
       {
-        name: 'config',
-        description: 'Whether to also reload the configuration',
+        name: "config",
+        description: "Whether to also reload the configuration",
         type: 5,
         required: false,
       },
@@ -26,7 +26,7 @@ export default new Command(
   async (interaction: CommandInteraction) => {
     const reloadConfig =
       (interaction.options as CommandInteractionOptionResolver).getBoolean(
-        'config'
+        "config"
       ) || false;
     const client = interaction.client as BotClient;
 
@@ -39,10 +39,10 @@ export default new Command(
       if (reloadConfig) {
         try {
           configHandler.reloadConfig();
-          results.push('✅ Configuration reloaded successfully');
-          Logger.info('Configuration reloaded via admin command');
+          results.push("✅ Configuration reloaded successfully");
+          Logger.info("Configuration reloaded via admin command");
         } catch (error) {
-          Logger.error('Failed to reload configuration:', error);
+          Logger.error("Failed to reload configuration:", error);
           results.push(
             `⚠️ Failed to reload configuration: ${error instanceof Error ? error.message : String(error)}`
           );
@@ -59,36 +59,36 @@ export default new Command(
         await moduleHandler.loadAllModules();
         await moduleHandler.registerCommands();
 
-        results.push('✅ All modules reloaded successfully');
-        Logger.info('All modules reloaded via admin command');
+        results.push("✅ All modules reloaded successfully");
+        Logger.info("All modules reloaded via admin command");
       } catch (error) {
-        Logger.error('Error reloading modules:', error);
+        Logger.error("Error reloading modules:", error);
         results.push(
           `⚠️ Failed to reload modules: ${error instanceof Error ? error.message : String(error)}`
         );
       }
 
-      const hasErrors = results.some(result => result.includes('⚠️'));
+      const hasErrors = results.some(result => result.includes("⚠️"));
 
       await interaction.editReply({
         embeds: [
           hasErrors
-            ? Embed.warning(results.join('\n'), 'Reload Partially Successful')
-            : Embed.success(results.join('\n'), 'Reload Successful'),
+            ? Embed.warning(results.join("\n"), "Reload Partially Successful")
+            : Embed.success(results.join("\n"), "Reload Successful"),
         ],
       });
     } catch (error) {
-      Logger.error('Error in reload command:', error);
+      Logger.error("Error in reload command:", error);
 
       await interaction.editReply({
         embeds: [
           Embed.error(
             `An error occurred while reloading: ${error instanceof Error ? error.message : String(error)}`,
-            'Reload Failed'
+            "Reload Failed"
           ),
         ],
       });
     }
   },
-  'admin'
+  "admin"
 );

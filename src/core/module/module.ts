@@ -1,9 +1,9 @@
-import { Client, Collection } from 'discord.js';
+import { Client, Collection } from "discord.js";
 import {
   Command,
   Event,
   Module as ModuleInterface,
-} from '../../types/discord.js';
+} from "../../types/discord.js";
 
 class Module implements ModuleInterface {
   public readonly name: string;

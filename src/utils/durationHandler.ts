@@ -12,16 +12,16 @@ export function parseDuration(time: string): number | null {
     const value = parseInt(match[1], 10);
     const unit = match[2];
     switch (unit) {
-      case 'd':
+      case "d":
         duration += value * day;
         break;
-      case 'h':
+      case "h":
         duration += value * hour;
         break;
-      case 'm':
+      case "m":
         duration += value * minute;
         break;
-      case 's':
+      case "s":
         duration += value * second;
         break;
       default:
@@ -39,12 +39,12 @@ export function formatDuration(duration: number): string {
   const days = Math.floor(duration / (1000 * 60 * 60 * 24));
 
   const parts = [];
-  if (days > 0) parts.push(`${days} ${days === 1 ? 'Tag' : 'Tage'}`);
-  if (hours > 0) parts.push(`${hours} ${hours === 1 ? 'Stunde' : 'Stunden'}`);
+  if (days > 0) parts.push(`${days} ${days === 1 ? "Tag" : "Tage"}`);
+  if (hours > 0) parts.push(`${hours} ${hours === 1 ? "Stunde" : "Stunden"}`);
   if (minutes > 0)
-    parts.push(`${minutes} ${minutes === 1 ? 'Minute' : 'Minuten'}`);
+    parts.push(`${minutes} ${minutes === 1 ? "Minute" : "Minuten"}`);
   if (seconds > 0)
-    parts.push(`${seconds} ${seconds === 1 ? 'Sekunde' : 'Sekunden'}`);
+    parts.push(`${seconds} ${seconds === 1 ? "Sekunde" : "Sekunden"}`);
 
-  return parts.join(', ');
+  return parts.join(", ");
 }

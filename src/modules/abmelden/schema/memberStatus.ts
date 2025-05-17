@@ -1,10 +1,10 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, Document } from "mongoose";
 
 export interface IMemberStatus extends Document {
   userId: string;
   displayName: string;
   username: string;
-  status: 'angemeldet' | 'abgemeldet';
+  status: "angemeldet" | "abgemeldet";
   reason?: string;
   endTime?: Date;
   createdAt: Date;
@@ -18,8 +18,8 @@ const MemberStatusSchema = new Schema(
     username: { type: String, required: true },
     status: {
       type: String,
-      enum: ['angemeldet', 'abgemeldet'],
-      default: 'angemeldet',
+      enum: ["angemeldet", "abgemeldet"],
+      default: "angemeldet",
       required: true,
     },
     reason: { type: String, default: null },
@@ -29,6 +29,6 @@ const MemberStatusSchema = new Schema(
 );
 
 export const MemberStatusModel = mongoose.model<IMemberStatus>(
-  'MemberStatus',
+  "MemberStatus",
   MemberStatusSchema
 );

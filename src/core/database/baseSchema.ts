@@ -1,5 +1,5 @@
-import mongoose, { Document, Schema } from 'mongoose';
-import DatabaseHandler from './databaseHandler.js';
+import mongoose, { Document, Schema } from "mongoose";
+import DatabaseHandler from "./databaseHandler.js";
 
 abstract class BaseSchema<T extends Document> {
   protected model!: mongoose.Model<T>;
@@ -131,7 +131,7 @@ abstract class BaseSchema<T extends Document> {
     if (!this.dbHandler.getConnectionStatus()) {
       await this.dbHandler.connect();
       if (!this.dbHandler.getConnectionStatus()) {
-        throw new Error('Failed to connect to database');
+        throw new Error("Failed to connect to database");
       }
     }
   }

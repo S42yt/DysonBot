@@ -1,9 +1,9 @@
-import { Collection } from 'discord.js';
-import { readdirSync } from 'fs';
-import path from 'path';
-import { BotClient, Event } from '../../types/discord.js';
-import Logger from '../../utils/logger.js';
-import ConfigHandler from '../../utils/configHandler.js';
+import { Collection } from "discord.js";
+import { readdirSync } from "fs";
+import path from "path";
+import { BotClient, Event } from "../../types/discord.js";
+import Logger from "../../utils/logger.js";
+import ConfigHandler from "../../utils/configHandler.js";
 
 class EventHandler {
   private client: BotClient;
@@ -72,7 +72,7 @@ class EventHandler {
       return events;
     }
 
-    const eventsDir = path.join(moduleDir, 'event');
+    const eventsDir = path.join(moduleDir, "event");
 
     try {
       if (!readdirSync(eventsDir, { withFileTypes: true }).length) {
@@ -81,7 +81,7 @@ class EventHandler {
       }
 
       const eventFiles = readdirSync(eventsDir).filter(file =>
-        file.endsWith('.js')
+        file.endsWith(".js")
       );
 
       for (const file of eventFiles) {

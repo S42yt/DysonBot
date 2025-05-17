@@ -1,18 +1,18 @@
-import { GuildMember } from 'discord.js';
-import { Event } from '../../../core/index.js';
-import Logger from '../../../utils/logger.js';
-import ConfigHandler from '../../../utils/configHandler.js';
+import { GuildMember } from "discord.js";
+import { Event } from "../../../core/index.js";
+import Logger from "../../../utils/logger.js";
+import ConfigHandler from "../../../utils/configHandler.js";
 
 export default new Event(
-  'guildMemberAdd',
+  "guildMemberAdd",
   async (member: GuildMember) => {
     try {
       const configHandler = ConfigHandler.getInstance();
-      const moduleEnv = configHandler.getModuleEnv('welcome');
+      const moduleEnv = configHandler.getModuleEnv("welcome");
       const joinRoleId = moduleEnv.joinRole;
 
       if (!joinRoleId) {
-        Logger.error('Join role ID is not configured');
+        Logger.error("Join role ID is not configured");
         return;
       }
 
@@ -25,8 +25,8 @@ export default new Event(
       await member.roles.add(role);
       Logger.info(`Added join role to ${member.user.tag}`);
     } catch (error) {
-      Logger.error('Error in joinrole event:', error);
+      Logger.error("Error in joinrole event:", error);
     }
   },
-  'welcome'
+  "welcome"
 );

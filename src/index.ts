@@ -1,24 +1,24 @@
-import createBotClient from './bot.js';
-import { ModuleHandler } from './core/index.js';
-import Logger from './utils/logger.js';
-import ConfigHandler from './utils/configHandler.js';
-import dotenv from 'dotenv';
-import './utils/logs.js';
+import createBotClient from "./bot.js";
+import { ModuleHandler } from "./core/index.js";
+import Logger from "./utils/logger.js";
+import ConfigHandler from "./utils/configHandler.js";
+import dotenv from "dotenv";
+import "./utils/logs.js";
 
 dotenv.config();
 
-process.on('unhandledRejection', error => {
-  Logger.error('Unhandled promise rejection:', error);
+process.on("unhandledRejection", error => {
+  Logger.error("Unhandled promise rejection:", error);
 });
 
-process.on('uncaughtException', error => {
-  Logger.error('Uncaught exception:', error);
+process.on("uncaughtException", error => {
+  Logger.error("Uncaught exception:", error);
   process.exit(1);
 });
 
 async function startBot() {
   try {
-    Logger.info('Starting bot initialization...');
+    Logger.info("Starting bot initialization...");
 
     const configHandler = ConfigHandler.getInstance();
     const config = configHandler.getConfig();
@@ -32,7 +32,7 @@ async function startBot() {
     await moduleHandler.registerCommands();
 
     if (!config.token) {
-      throw new Error('Bot token is missing in configuration');
+      throw new Error("Bot token is missing in configuration");
     }
 
     await client.login(config.token);
@@ -40,14 +40,14 @@ async function startBot() {
 
     return client;
   } catch (error) {
-    Logger.error('Failed to start bot:', error);
+    Logger.error("Failed to start bot:", error);
     process.exit(1);
   }
 }
 
 startBot()
-  .then(() => Logger.info('Bot initialization completed successfully'))
+  .then(() => Logger.info("Bot initialization completed successfully"))
   .catch(error => {
-    Logger.error('Bot initialization failed:', error);
+    Logger.error("Bot initialization failed:", error);
     process.exit(1);
   });

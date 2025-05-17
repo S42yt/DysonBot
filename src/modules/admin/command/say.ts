@@ -3,20 +3,20 @@ import {
   PermissionFlagsBits,
   CommandInteractionOptionResolver,
   MessageFlags,
-} from 'discord.js';
-import { Command } from '../../../core/index.js';
-import { Embed } from '../../../types/embed.js';
-import Logger from '../../../utils/logger.js';
+} from "discord.js";
+import { Command } from "../../../core/index.js";
+import { Embed } from "../../../types/embed.js";
+import Logger from "../../../utils/logger.js";
 
 export default new Command(
   {
-    name: 'say',
-    description: 'Make the bot say a message',
+    name: "say",
+    description: "Make the bot say a message",
     defaultMemberPermissions: PermissionFlagsBits.Administrator,
     options: [
       {
-        name: 'message',
-        description: 'The message to send',
+        name: "message",
+        description: "The message to send",
         type: 3,
         required: true,
       },
@@ -25,11 +25,11 @@ export default new Command(
   async (interaction: CommandInteraction) => {
     const message = (
       interaction.options as CommandInteractionOptionResolver
-    ).getString('message');
+    ).getString("message");
 
     if (!message) {
       await interaction.reply({
-        embeds: [Embed.error('Please provide a message to send', 'Error')],
+        embeds: [Embed.error("Please provide a message to send", "Error")],
         flags: MessageFlags.Ephemeral,
       });
       return;
@@ -41,8 +41,8 @@ export default new Command(
       await interaction.reply({
         embeds: [
           Embed.error(
-            'This command can only be used in text channels',
-            'Error'
+            "This command can only be used in text channels",
+            "Error"
           ),
         ],
         flags: MessageFlags.Ephemeral,
@@ -50,10 +50,10 @@ export default new Command(
       return;
     }
 
-    if (!('send' in channel)) {
+    if (!("send" in channel)) {
       await interaction.reply({
         embeds: [
-          Embed.error('Cannot send messages to this channel type', 'Error'),
+          Embed.error("Cannot send messages to this channel type", "Error"),
         ],
         flags: MessageFlags.Ephemeral,
       });
@@ -63,8 +63,8 @@ export default new Command(
     await interaction.reply({
       embeds: [
         Embed.success(
-          'Your message will be sent to the channel',
-          'Message Sending'
+          "Your message will be sent to the channel",
+          "Message Sending"
         ),
       ],
       flags: MessageFlags.Ephemeral,
@@ -73,22 +73,22 @@ export default new Command(
     try {
       await channel.send(message);
 
-      const channelName = 'name' in channel ? channel.name : 'unknown';
+      const channelName = "name" in channel ? channel.name : "unknown";
       Logger.info(
         `Admin ${interaction.user.tag} used the say command in #${channelName} (${channel.id})`
       );
     } catch (error) {
-      Logger.error('Error in say command:', error);
+      Logger.error("Error in say command:", error);
 
       await interaction.editReply({
         embeds: [
           Embed.error(
             `Failed to send message: ${error instanceof Error ? error.message : String(error)}`,
-            'Error'
+            "Error"
           ),
         ],
       });
     }
   },
-  'admin'
+  "admin"
 );

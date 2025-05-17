@@ -1,7 +1,7 @@
-import { readFileSync } from 'fs';
-import { join } from 'path';
-import { BotConfig } from '../types/config.js';
-import Logger from './logger.js';
+import { readFileSync } from "fs";
+import { join } from "path";
+import { BotConfig } from "../types/config.js";
+import Logger from "./logger.js";
 
 class ConfigHandler {
   private static instance: ConfigHandler;
@@ -9,7 +9,7 @@ class ConfigHandler {
   private configPath: string;
 
   private constructor() {
-    this.configPath = join(process.cwd(), 'config.nix');
+    this.configPath = join(process.cwd(), "config.nix");
   }
 
   public static getInstance(): ConfigHandler {
@@ -22,7 +22,7 @@ class ConfigHandler {
   private parseNixConfig(content: string): BotConfig {
     Object.entries(process.env).forEach(([key, value]) => {
       if (value) {
-        content = content.replace(new RegExp(`\\$${key}`, 'g'), value);
+        content = content.replace(new RegExp(`\\$${key}`, "g"), value);
       }
     });
 
@@ -31,25 +31,25 @@ class ConfigHandler {
 
   private basicParseNixConfig(content: string): BotConfig {
     try {
-      let cleanContent = content.replace(/#.*$/gm, '').replace(/\/\/.*$/gm, '');
+      let cleanContent = content.replace(/#.*$/gm, "").replace(/\/\/.*$/gm, "");
 
-      cleanContent = cleanContent.replace(/}(\s*){/g, '},\n$1{');
+      cleanContent = cleanContent.replace(/}(\s*){/g, "},\n$1{");
 
       let jsonLike = cleanContent
-        .replace(/(\w+)\s*=/g, '"$1":')
-        .replace(/;/g, ',')
-        .replace(/\$\{([^}]+)\}/g, '"$1"');
+        .replace(/(\w+)\s*=/g, "\"$1\":")
+        .replace(/;/g, ",")
+        .replace(/\$\{([^}]+)\}/g, "\"$1\"");
 
-      jsonLike = jsonLike.replace(/,(\s*[}\]])/g, '$1');
+      jsonLike = jsonLike.replace(/,(\s*[}\]])/g, "$1");
 
-      const jsonStr = jsonLike.trim().startsWith('{')
+      const jsonStr = jsonLike.trim().startsWith("{")
         ? jsonLike
         : `{${jsonLike}}`;
 
       return JSON.parse(jsonStr) as BotConfig;
     } catch (error) {
-      Logger.error('Error parsing config:', error);
-      throw new Error('Failed to parse config file');
+      Logger.error("Error parsing config:", error);
+      throw new Error("Failed to parse config file");
     }
   }
 
@@ -59,16 +59,16 @@ class ConfigHandler {
         return this.config;
       }
 
-      const nixContent = readFileSync(this.configPath, 'utf-8');
+      const nixContent = readFileSync(this.configPath, "utf-8");
       this.config = this.parseNixConfig(nixContent);
 
       if (forceReload) {
-        Logger.info('Config reloaded');
+        Logger.info("Config reloaded");
       }
       return this.config;
     } catch (error) {
-      Logger.error('Failed to load config:', error);
-      throw new Error('Failed to load config');
+      Logger.error("Failed to load config:", error);
+      throw new Error("Failed to load config");
     }
   }
 

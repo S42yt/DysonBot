@@ -3,7 +3,7 @@ import {
   EmbedAuthorData,
   EmbedBuilder,
   EmbedFooterData,
-} from 'discord.js';
+} from "discord.js";
 
 export interface EmbedOptions {
   title?: string;
@@ -36,7 +36,7 @@ export class Embed extends EmbedBuilder {
     if (options.url) this.setURL(options.url);
 
     if (options.timestamp) {
-      if (typeof options.timestamp === 'boolean') {
+      if (typeof options.timestamp === "boolean") {
         this.setTimestamp();
       } else {
         this.setTimestamp(options.timestamp);
@@ -50,38 +50,38 @@ export class Embed extends EmbedBuilder {
     }
   }
 
-  static success(description: string, title = 'Success'): Embed {
+  static success(description: string, title = "Success"): Embed {
     return new Embed({
       title,
       description,
-      color: '#43B581',
+      color: "#43B581",
       timestamp: true,
     });
   }
 
-  static error(description: string, title = 'Error'): Embed {
+  static error(description: string, title = "Error"): Embed {
     return new Embed({
       title,
       description,
-      color: '#F04747',
+      color: "#F04747",
       timestamp: true,
     });
   }
 
-  static info(description: string, title = 'Information'): Embed {
+  static info(description: string, title = "Information"): Embed {
     return new Embed({
       title,
       description,
-      color: '#0099FF',
+      color: "#0099FF",
       timestamp: true,
     });
   }
 
-  static warning(description: string, title = 'Warning'): Embed {
+  static warning(description: string, title = "Warning"): Embed {
     return new Embed({
       title,
       description,
-      color: '#FFA500',
+      color: "#FFA500",
       timestamp: true,
     });
   }

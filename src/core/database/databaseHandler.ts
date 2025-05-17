@@ -1,6 +1,6 @@
-import mongoose from 'mongoose';
-import Logger from '../../utils/logger.js';
-import ConfigHandler from '../../utils/configHandler.js';
+import mongoose from "mongoose";
+import Logger from "../../utils/logger.js";
+import ConfigHandler from "../../utils/configHandler.js";
 
 export class DatabaseHandler {
   private static instance: DatabaseHandler;
@@ -28,20 +28,20 @@ export class DatabaseHandler {
       const connectionString = config.connectionString;
       const dbName = config.dbName;
 
-      const fullConnectionString = connectionString.startsWith('mongodb')
+      const fullConnectionString = connectionString.startsWith("mongodb")
         ? connectionString
         : `mongodb+srv://${connectionString}`;
 
-      Logger.info('Connecting to database...');
+      Logger.info("Connecting to database...");
 
       await mongoose.connect(fullConnectionString, {
         dbName: dbName,
       });
 
       this.isConnected = true;
-      Logger.info('Connected to database');
+      Logger.info("Connected to database");
     } catch (error) {
-      Logger.error('Error connecting to database:', error);
+      Logger.error("Error connecting to database:", error);
       throw error;
     }
   }
@@ -54,9 +54,9 @@ export class DatabaseHandler {
     try {
       await mongoose.disconnect();
       this.isConnected = false;
-      Logger.info('Disconnected from database');
+      Logger.info("Disconnected from database");
     } catch (error) {
-      Logger.error('Error disconnecting from database:', error);
+      Logger.error("Error disconnecting from database:", error);
       throw error;
     }
   }

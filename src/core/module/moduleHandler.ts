@@ -1,12 +1,12 @@
-import { Collection } from 'discord.js';
-import { readdirSync } from 'fs';
-import path from 'path';
-import { BotClient, Module as ModuleInterface } from '../../types/discord.js';
-import Logger from '../../utils/logger.js';
-import ConfigHandler from '../../utils/configHandler.js';
-import CommandHandler from '../command/commandHandler.js';
-import EventHandler from '../event/eventHandler.js';
-import Module from './module.js';
+import { Collection } from "discord.js";
+import { readdirSync } from "fs";
+import path from "path";
+import { BotClient, Module as ModuleInterface } from "../../types/discord.js";
+import Logger from "../../utils/logger.js";
+import ConfigHandler from "../../utils/configHandler.js";
+import CommandHandler from "../command/commandHandler.js";
+import EventHandler from "../event/eventHandler.js";
+import Module from "./module.js";
 
 class ModuleHandler {
   private client: BotClient;
@@ -21,7 +21,7 @@ class ModuleHandler {
     this.commandHandler = new CommandHandler(client);
     this.eventHandler = new EventHandler(client);
     this.client.modules = new Collection<string, ModuleInterface>();
-    this.modulesDir = path.join(process.cwd(), 'src', 'modules');
+    this.modulesDir = path.join(process.cwd(), "src", "modules");
   }
 
   public async unloadModule(moduleName: string): Promise<boolean> {
@@ -77,7 +77,7 @@ class ModuleHandler {
         return null;
       }
 
-      const indexPath = path.join(moduleDir, 'index.ts');
+      const indexPath = path.join(moduleDir, "index.ts");
       let moduleInfo: any = {
         name: moduleName,
         description: `Module ${moduleName}`,
@@ -87,7 +87,7 @@ class ModuleHandler {
         const indexFile = await import(`${indexPath}?update=${Date.now()}`);
         const moduleExport = indexFile.default || indexFile;
 
-        if (typeof moduleExport === 'object') {
+        if (typeof moduleExport === "object") {
           moduleInfo = {
             ...moduleInfo,
             ...moduleExport,
@@ -147,7 +147,7 @@ class ModuleHandler {
       Logger.info(`Loaded ${this.client.modules.size} module(s)`);
       return this.client.modules;
     } catch (error) {
-      Logger.error('Error loading modules:', error);
+      Logger.error("Error loading modules:", error);
       return this.client.modules;
     }
   }

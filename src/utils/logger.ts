@@ -1,6 +1,6 @@
-import chalk from 'chalk';
+import chalk from "chalk";
 
-type LogLevel = 'LOG' | 'INFO' | 'WARNING' | 'ERROR';
+type LogLevel = "LOG" | "INFO" | "WARNING" | "ERROR";
 
 class Logger {
   private static getTimestamp(): string {
@@ -17,16 +17,16 @@ class Logger {
     let coloredLevel: string;
 
     switch (level) {
-      case 'LOG':
+      case "LOG":
         coloredLevel = chalk.white(`[${level}]`);
         break;
-      case 'INFO':
+      case "INFO":
         coloredLevel = chalk.blue(`[${level}]`);
         break;
-      case 'WARNING':
+      case "WARNING":
         coloredLevel = chalk.yellow(`[${level}]`);
         break;
-      case 'ERROR':
+      case "ERROR":
         coloredLevel = chalk.red(`[${level}]`);
         break;
     }
@@ -35,19 +35,19 @@ class Logger {
   }
 
   public static log(message: string, ...args: any[]): void {
-    this.logWithColor('LOG', message, ...args);
+    this.logWithColor("LOG", message, ...args);
   }
 
   public static info(message: string, ...args: any[]): void {
-    this.logWithColor('INFO', message, ...args);
+    this.logWithColor("INFO", message, ...args);
   }
 
   public static warn(message: string, ...args: any[]): void {
-    this.logWithColor('WARNING', message, ...args);
+    this.logWithColor("WARNING", message, ...args);
   }
 
   public static error(message: string, ...args: any[]): void {
-    this.logWithColor('ERROR', message, ...args);
+    this.logWithColor("ERROR", message, ...args);
   }
 }
 

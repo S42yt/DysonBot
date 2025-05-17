@@ -1,9 +1,9 @@
-import { Client, GatewayIntentBits, Collection } from 'discord.js';
-import { BotClient } from './types/discord.js';
-import Logger from './utils/logger.js';
+import { Client, GatewayIntentBits, Collection } from "discord.js";
+import { BotClient } from "./types/discord.js";
+import Logger from "./utils/logger.js";
 
 export default function createBotClient(): BotClient {
-  Logger.info('Creating bot client...');
+  Logger.info("Creating bot client...");
 
   const client = new Client({
     intents: [
@@ -33,11 +33,11 @@ export default function createBotClient(): BotClient {
   client.modules = new Collection();
   client.events = new Collection();
 
-  client.on('error', error => {
-    Logger.error('Discord client error:', error);
+  client.on("error", error => {
+    Logger.error("Discord client error:", error);
   });
 
-  client.on('interactionCreate', async interaction => {
+  client.on("interactionCreate", async interaction => {
     if (!interaction.isChatInputCommand()) return;
 
     const command = client.commands.get(interaction.commandName);
@@ -55,7 +55,7 @@ export default function createBotClient(): BotClient {
         error
       );
 
-      const errorMessage = 'There was an error executing this command!';
+      const errorMessage = "There was an error executing this command!";
       if (interaction.replied || interaction.deferred) {
         await interaction.followUp({ content: errorMessage, ephemeral: true });
       } else {

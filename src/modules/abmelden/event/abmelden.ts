@@ -1,14 +1,14 @@
-import { Event } from '../../../core/index.js';
-import { MemberStatusModel } from '../schema/memberStatus.js';
-import Logger from '../../../utils/logger.js';
-import ConfigHandler from '../../../utils/configHandler.js';
+import { Event } from "../../../core/index.js";
+import { MemberStatusModel } from "../schema/memberStatus.js";
+import Logger from "../../../utils/logger.js";
+import ConfigHandler from "../../../utils/configHandler.js";
 
-export default new Event<'guildMemberUpdate'>(
-  'guildMemberUpdate',
+export default new Event<"guildMemberUpdate">(
+  "guildMemberUpdate",
   async (oldMember, newMember) => {
     try {
       const configHandler = ConfigHandler.getInstance();
-      const moduleEnv = configHandler.getModuleEnv('abmelden');
+      const moduleEnv = configHandler.getModuleEnv("abmelden");
       const clanRoleId = moduleEnv.role;
 
       if (
@@ -24,7 +24,7 @@ export default new Event<'guildMemberUpdate'>(
             userId: newMember.id,
             displayName: newMember.displayName,
             username: newMember.user.username,
-            status: 'angemeldet',
+            status: "angemeldet",
           });
           await memberStatus.save();
           Logger.info(
@@ -42,8 +42,8 @@ export default new Event<'guildMemberUpdate'>(
         );
       }
     } catch (error) {
-      Logger.error('Error in abmelden event:', error);
+      Logger.error("Error in abmelden event:", error);
     }
   },
-  'abmelden'
+  "abmelden"
 );
