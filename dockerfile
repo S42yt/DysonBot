@@ -2,14 +2,10 @@ FROM node:23-alpine
 
 WORKDIR /app
 
-RUN curl -fsSL https://bun.sh/install | bash
+COPY package.json package-lock.json* ./
 
-COPY package.json bun.lockb ./
-
-RUN bun install
+RUN npm ci
 
 COPY . .
 
-RUN bun run dev
-
-CMD ["node", "dist/index.js"]
+CMD ["npm,", "run", "dev"]
