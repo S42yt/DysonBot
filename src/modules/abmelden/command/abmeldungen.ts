@@ -1,4 +1,9 @@
-import { CommandInteraction, GuildMember, Guild, Role } from "discord.js";
+import {
+  CommandInteraction,
+  Guild,
+  Role,
+  PermissionFlagsBits,
+} from "discord.js";
 import { Command } from "../../../core/index.js";
 import { Embed } from "../../../types/embed.js";
 import { MemberStatusModel } from "../schema/memberStatus.js";
@@ -10,29 +15,29 @@ export default new Command(
   {
     name: "abmeldungen",
     description: "Zeige alle Mitglieder mit ihrem aktuellen Status an",
+    defaultMemberPermissions: PermissionFlagsBits.Administrator,
+    dmPermission: false,
   },
   async (interaction: CommandInteraction): Promise<void> => {
     try {
-      const member = interaction.member as GuildMember;
-      const guild = interaction.guild as Guild;
-      const configHandler = ConfigHandler.getInstance();
-      const moduleEnv = configHandler.getModuleEnv("abmelden");
-      const clanRoleId = moduleEnv.role;
-
-      if (!member.roles.cache.has(clanRoleId)) {
+      if (!interaction.memberPermissions?.has(PermissionFlagsBits.Administrator)) {
         await interaction.reply({
           embeds: [
-            new Embed({
-              title: "❌ Fehlende Berechtigung",
-              description:
-                "Du hast nicht die erforderliche Rolle, um diesen Befehl zu verwenden.",
-              color: "#ED4245",
-            }),
+            Embed.error(
+              "You do not have permission to use this command.",
+              "Permission Denied"
+            ),
           ],
           ephemeral: true,
         });
         return;
       }
+
+      const guild = interaction.guild as Guild;
+      const configHandler = ConfigHandler.getInstance();
+      const moduleEnv = configHandler.getModuleEnv("abmelden");
+      const clanRoleId = moduleEnv.role;
+
 
       await interaction.deferReply();
 
@@ -44,7 +49,7 @@ export default new Command(
       });
 
       const statusMap = new Map(
-        memberStatuses.map(status => [status.userId, status])
+        memberStatuses.map((status) => [status.userId, status])
       );
 
       const angemeldetFields = [];

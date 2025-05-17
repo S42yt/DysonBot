@@ -1,4 +1,4 @@
-import { Collection, REST, Routes } from "discord.js";
+import { ApplicationCommandOptionData, Collection, REST, Routes } from "discord.js";
 import { readdirSync } from "fs";
 import path from "path";
 import { BotClient, Command } from "../../types/discord.js";
@@ -96,12 +96,30 @@ class CommandHandler {
 
     const rest = new REST({ version: "10" }).setToken(config.token);
 
+    
     const commands = Array.from(this.client.commands.values()).map(command => {
-      return JSON.parse(
-        JSON.stringify(command.data, (key, value) =>
-          typeof value === "bigint" ? value.toString() : value
-        )
-      );
+      
+      const commandData: {
+        name: string;
+        description: string;
+        options: ApplicationCommandOptionData[];
+        dmPermission: boolean;
+        defaultMemberPermissions?: string;
+      } = {
+        name: command.data.name,
+        description: command.data.description,
+        options: command.data.options || [],
+        dmPermission: command.data.dmPermission ?? false
+      };
+      
+      
+      
+      if (command.data.defaultMemberPermissions) {
+        commandData.defaultMemberPermissions = "8";
+        Logger.info(`Restricting command ${command.data.name} to administrators`);
+      }
+      
+      return commandData;
     });
 
     if (commands.length === 0) {
@@ -111,7 +129,16 @@ class CommandHandler {
 
     try {
       Logger.info(`Registering ${commands.length} application commands`);
-
+      
+      
+      Logger.info("Clearing existing commands...");
+      await rest.put(
+        Routes.applicationGuildCommands(config.clientId, config.guildId),
+        { body: [] }
+      );
+      
+      
+      Logger.info("Registering updated commands...");
       await rest.put(
         Routes.applicationGuildCommands(config.clientId, config.guildId),
         { body: commands }

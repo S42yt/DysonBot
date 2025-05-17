@@ -14,6 +14,7 @@ export default new Command(
     name: "reload",
     description: "Reload all modules and optionally configuration",
     defaultMemberPermissions: PermissionFlagsBits.Administrator,
+    dmPermission: false, 
     options: [
       {
         name: "config",
@@ -24,6 +25,19 @@ export default new Command(
     ],
   },
   async (interaction: CommandInteraction) => {
+    if (!interaction.memberPermissions?.has(PermissionFlagsBits.Administrator)) {
+      await interaction.reply({
+        embeds: [
+          Embed.error(
+            "You do not have permission to use this command.",
+            "Permission Denied"
+          ),
+        ],
+        ephemeral: true,
+      });
+      return;
+    }
+
     const reloadConfig =
       (interaction.options as CommandInteractionOptionResolver).getBoolean(
         "config"
@@ -68,7 +82,7 @@ export default new Command(
         );
       }
 
-      const hasErrors = results.some(result => result.includes("⚠️"));
+      const hasErrors = results.some((result) => result.includes("⚠️"));
 
       await interaction.editReply({
         embeds: [

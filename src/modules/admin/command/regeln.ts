@@ -15,8 +15,22 @@ export default new Command(
     name: "regeln",
     description: "Sendet eine Embed-Nachricht mit den Serverregeln",
     defaultMemberPermissions: PermissionFlagsBits.Administrator,
+    dmPermission: false,
   },
   async (interaction: CommandInteraction) => {
+    if (!interaction.memberPermissions?.has(PermissionFlagsBits.Administrator)) {
+      await interaction.reply({
+        embeds: [
+          Embed.error(
+            "You do not have permission to use this command.",
+            "Permission Denied"
+          ),
+        ],
+        ephemeral: true,
+      });
+      return;
+    }
+    
     await interaction.deferReply({ flags: MessageFlags.Ephemeral });
     
     const channel = interaction.channel;

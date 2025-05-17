@@ -13,6 +13,7 @@ export default new Command(
     name: "say",
     description: "Make the bot say a message",
     defaultMemberPermissions: PermissionFlagsBits.Administrator,
+    dmPermission: false,
     options: [
       {
         name: "message",
@@ -23,6 +24,19 @@ export default new Command(
     ],
   },
   async (interaction: CommandInteraction) => {
+    if (!interaction.memberPermissions?.has(PermissionFlagsBits.Administrator)) {
+      await interaction.reply({
+        embeds: [
+          Embed.error(
+            "You do not have permission to use this command.",
+            "Permission Denied"
+          ),
+        ],
+        ephemeral: true,
+      });
+      return;
+    }
+
     const message = (
       interaction.options as CommandInteractionOptionResolver
     ).getString("message");
