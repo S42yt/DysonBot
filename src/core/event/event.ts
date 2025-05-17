@@ -1,5 +1,5 @@
 import { ClientEvents } from 'discord.js';
-import { Event as EventInterface } from '../../types/discord';
+import { Event as EventInterface } from '../../types/discord.js';
 
 class Event<K extends keyof ClientEvents> implements EventInterface<K> {
   public readonly name: K;

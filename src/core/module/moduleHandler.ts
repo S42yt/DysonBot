@@ -1,12 +1,12 @@
 import { Collection } from 'discord.js';
 import { readdirSync } from 'fs';
 import path from 'path';
-import { BotClient, Module as ModuleInterface } from '../../types/discord';
-import Logger from '../../utils/logger';
-import ConfigHandler from '../../utils/configHandler';
-import CommandHandler from '../command/commandHandler';
-import EventHandler from '../event/eventHandler';
-import Module from './module';
+import { BotClient, Module as ModuleInterface } from '../../types/discord.js';
+import Logger from '../../utils/logger.js';
+import ConfigHandler from '../../utils/configHandler.js';
+import CommandHandler from '../command/commandHandler.js';
+import EventHandler from '../event/eventHandler.js';
+import Module from './module.js';
 
 class ModuleHandler {
   private client: BotClient;

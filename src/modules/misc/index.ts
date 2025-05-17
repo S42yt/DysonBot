@@ -1,6 +1,6 @@
 import { Client } from 'discord.js';
-import Logger from '../../utils/logger';
-import ConfigHandler from '../../utils/configHandler';
+import Logger from '../../utils/logger.js';
+import ConfigHandler from '../../utils/configHandler.js';
 
 export default {
   name: 'misc',

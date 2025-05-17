@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import path from 'path';
-import Logger from './logger';
+import Logger from './logger.js';
 
 class LogManager {
   private static instance: LogManager;

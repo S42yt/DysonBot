@@ -1,10 +1,13 @@
 import { CommandInteraction, GuildMember } from 'discord.js';
-import { Command } from '../../../core';
-import { Embed } from '../../../types/embed';
-import { MemberStatusModel } from '../schema/memberStatus';
-import { parseDuration, formatDuration } from '../../../utils/durationHandler';
-import Logger from '../../../utils/logger';
-import ConfigHandler from '../../../utils/configHandler';
+import { Command } from '../../../core/index.js';
+import { Embed } from '../../../types/embed.js';
+import { MemberStatusModel } from '../schema/memberStatus.js';
+import {
+  parseDuration,
+  formatDuration,
+} from '../../../utils/durationHandler.js';
+import Logger from '../../../utils/logger.js';
+import ConfigHandler from '../../../utils/configHandler.js';
 
 export default new Command(
   {

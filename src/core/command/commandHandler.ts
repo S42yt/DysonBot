@@ -1,9 +1,9 @@
 import { Collection, REST, Routes } from 'discord.js';
 import { readdirSync } from 'fs';
 import path from 'path';
-import { BotClient, Command } from '../../types/discord';
-import Logger from '../../utils/logger';
-import ConfigHandler from '../../utils/configHandler';
+import { BotClient, Command } from '../../types/discord.js';
+import Logger from '../../utils/logger.js';
+import ConfigHandler from '../../utils/configHandler.js';
 
 class CommandHandler {
   private client: BotClient;
@@ -65,8 +65,8 @@ class CommandHandler {
         return commands;
       }
 
-      const commandFiles = readdirSync(commandsDir).filter(
-        file => file.endsWith('.js') || file.endsWith('.ts')
+      const commandFiles = readdirSync(commandsDir).filter(file =>
+        file.endsWith('.js')
       );
 
       for (const file of commandFiles) {

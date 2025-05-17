@@ -1,9 +1,9 @@
 import { Collection } from 'discord.js';
 import { readdirSync } from 'fs';
 import path from 'path';
-import { BotClient, Event } from '../../types/discord';
-import Logger from '../../utils/logger';
-import ConfigHandler from '../../utils/configHandler';
+import { BotClient, Event } from '../../types/discord.js';
+import Logger from '../../utils/logger.js';
+import ConfigHandler from '../../utils/configHandler.js';
 
 class EventHandler {
   private client: BotClient;
@@ -43,9 +43,13 @@ class EventHandler {
       event.module = moduleName;
 
       if (event.once) {
-        this.client.once(event.name, (...args) => event.execute(...args));
+        this.client.once(event.name, (...args: unknown[]) =>
+          event.execute(...args)
+        );
       } else {
-        this.client.on(event.name, (...args) => event.execute(...args));
+        this.client.on(event.name, (...args: unknown[]) =>
+          event.execute(...args)
+        );
       }
 
       this.client.events.set(event.name, event);
@@ -76,8 +80,8 @@ class EventHandler {
         return events;
       }
 
-      const eventFiles = readdirSync(eventsDir).filter(
-        file => file.endsWith('.js') || file.endsWith('.ts')
+      const eventFiles = readdirSync(eventsDir).filter(file =>
+        file.endsWith('.js')
       );
 
       for (const file of eventFiles) {

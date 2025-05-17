@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
-import DatabaseHandler from './databaseHandler';
+import DatabaseHandler from './databaseHandler.js';
 
 abstract class BaseSchema<T extends Document> {
   protected model!: mongoose.Model<T>;

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import Logger from '../../utils/logger';
-import ConfigHandler from '../../utils/configHandler';
+import Logger from '../../utils/logger.js';
+import ConfigHandler from '../../utils/configHandler.js';
 
 export class DatabaseHandler {
   private static instance: DatabaseHandler;

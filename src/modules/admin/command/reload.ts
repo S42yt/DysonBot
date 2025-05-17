@@ -3,11 +3,11 @@ import {
   PermissionFlagsBits,
   CommandInteractionOptionResolver,
 } from 'discord.js';
-import { Command, ModuleHandler } from '../../../core';
-import { Embed } from '../../../types/embed';
-import { BotClient } from '../../../types/discord';
-import ConfigHandler from '../../../utils/configHandler';
-import Logger from '../../../utils/logger';
+import { Command, ModuleHandler } from '../../../core/index.js';
+import { Embed } from '../../../types/embed.js';
+import { BotClient } from '../../../types/discord.js';
+import ConfigHandler from '../../../utils/configHandler.js';
+import Logger from '../../../utils/logger.js';
 
 export default new Command(
   {

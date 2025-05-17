@@ -1,4 +1,4 @@
-import DatabaseHandler from './databaseHandler';
-import BaseSchema from './baseSchema';
+import DatabaseHandler from './databaseHandler.js';
+import BaseSchema from './baseSchema.js';
 
 export { DatabaseHandler, BaseSchema };

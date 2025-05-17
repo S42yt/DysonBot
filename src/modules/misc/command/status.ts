@@ -1,9 +1,9 @@
 import { CommandInteraction, version as discordJsVersion } from 'discord.js';
-import { Command, DatabaseHandler } from '../../../core';
-import { Embed } from '../../../types/embed';
+import { Command, DatabaseHandler } from '../../../core/index.js';
+import { Embed } from '../../../types/embed.js';
 import os from 'os';
 import process from 'process';
-import Logger from '../../../utils/logger';
+import Logger from '../../../utils/logger.js';
 
 export default new Command(
   {

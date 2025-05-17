@@ -2,7 +2,7 @@ import {
   Command as CommandInterface,
   CommandExecute,
   SlashCommandOptions,
-} from '../../types/discord';
+} from '../../types/discord.js';
 
 class Command implements CommandInterface {
   public readonly data: SlashCommandOptions;

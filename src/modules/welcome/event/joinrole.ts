@@ -1,7 +1,7 @@
 import { GuildMember } from 'discord.js';
-import { Event } from '../../../core';
-import Logger from '../../../utils/logger';
-import ConfigHandler from '../../../utils/configHandler';
+import { Event } from '../../../core/index.js';
+import Logger from '../../../utils/logger.js';
+import ConfigHandler from '../../../utils/configHandler.js';
 
 export default new Event(
   'guildMemberAdd',

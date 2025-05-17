@@ -1,6 +1,6 @@
 import { ActivityType, Client } from 'discord.js';
-import { Event } from '../../../core';
-import Logger from '../../../utils/logger';
+import { Event } from '../../../core/index.js';
+import Logger from '../../../utils/logger.js';
 
 export default new Event(
   'ready',

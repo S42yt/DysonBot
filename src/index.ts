@@ -1,9 +1,9 @@
-import createBotClient from './bot';
-import { ModuleHandler } from './core';
-import Logger from './utils/logger';
-import ConfigHandler from './utils/configHandler';
+import createBotClient from './bot.js';
+import { ModuleHandler } from './core/index.js';
+import Logger from './utils/logger.js';
+import ConfigHandler from './utils/configHandler.js';
 import dotenv from 'dotenv';
-import './utils/logs';
+import './utils/logs.js';
 
 dotenv.config();
 

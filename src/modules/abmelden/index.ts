@@ -1,8 +1,7 @@
 import { Client } from 'discord.js';
-import Logger from '../../utils/logger';
-import ConfigHandler from '../../utils/configHandler';
-import { DatabaseHandler } from '../../core';
-import { MemberStatusModel } from './schema/memberStatus';
+import Logger from '../../utils/logger.js';
+import ConfigHandler from '../../utils/configHandler.js';
+import { DatabaseHandler } from '../../core/index.js';
 
 export default {
   name: 'abmelden',

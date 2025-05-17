@@ -1,8 +1,7 @@
-import { ClientEvents } from 'discord.js';
-import { Event } from '../../../core';
-import { MemberStatusModel } from '../schema/memberStatus';
-import Logger from '../../../utils/logger';
-import ConfigHandler from '../../../utils/configHandler';
+import { Event } from '../../../core/index.js';
+import { MemberStatusModel } from '../schema/memberStatus.js';
+import Logger from '../../../utils/logger.js';
+import ConfigHandler from '../../../utils/configHandler.js';
 
 export default new Event<'guildMemberUpdate'>(
   'guildMemberUpdate',

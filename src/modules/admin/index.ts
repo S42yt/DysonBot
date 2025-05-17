@@ -1,5 +1,5 @@
 import { Client } from 'discord.js';
-import Logger from '../../utils/logger';
+import Logger from '../../utils/logger.js';
 
 export default {
   name: 'admin',

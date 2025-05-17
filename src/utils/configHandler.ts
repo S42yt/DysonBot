@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { BotConfig } from '../types/config';
-import Logger from './logger';
+import { BotConfig } from '../types/config.js';
+import Logger from './logger.js';
 
 class ConfigHandler {
   private static instance: ConfigHandler;

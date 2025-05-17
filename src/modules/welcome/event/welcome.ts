@@ -1,8 +1,8 @@
 import { GuildMember, AttachmentBuilder, TextChannel } from 'discord.js';
-import { Event } from '../../../core';
-import { Embed } from '../../../types/embed';
-import Logger from '../../../utils/logger';
-import ConfigHandler from '../../../utils/configHandler';
+import { Event } from '../../../core/index.js';
+import { Embed } from '../../../types/embed.js';
+import Logger from '../../../utils/logger.js';
+import ConfigHandler from '../../../utils/configHandler.js';
 import { createCanvas, loadImage } from 'canvas';
 import path from 'path';
 import fs from 'fs';

@@ -1,3 +1,3 @@
-export * from './embed';
-export * from './config';
-export * from './discord';
+export * from './embed.js';
+export * from './config.js';
+export * from './discord.js';

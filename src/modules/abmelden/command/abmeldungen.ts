@@ -1,10 +1,10 @@
 import { CommandInteraction, GuildMember, Guild, Role } from 'discord.js';
-import { Command } from '../../../core';
-import { Embed } from '../../../types/embed';
-import { MemberStatusModel } from '../schema/memberStatus';
-import Logger from '../../../utils/logger';
-import ConfigHandler from '../../../utils/configHandler';
-import { formatDuration } from '../../../utils/durationHandler';
+import { Command } from '../../../core/index.js';
+import { Embed } from '../../../types/embed.js';
+import { MemberStatusModel } from '../schema/memberStatus.js';
+import Logger from '../../../utils/logger.js';
+import ConfigHandler from '../../../utils/configHandler.js';
+import { formatDuration } from '../../../utils/durationHandler.js';
 
 export default new Command(
   {
@@ -82,7 +82,7 @@ export default new Command(
         } else {
           angemeldetFields.push({
             name: `${guildMember.displayName} (${guildMember.user.username})`,
-            value: `Anwesend`,
+            value: 'Anwesend',
             inline: true,
           });
         }

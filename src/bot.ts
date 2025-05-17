@@ -1,7 +1,6 @@
 import { Client, GatewayIntentBits, Collection } from 'discord.js';
-import { BotClient } from './types/discord';
-import Logger from './utils/logger';
-import { DatabaseHandler } from './core';
+import { BotClient } from './types/discord.js';
+import Logger from './utils/logger.js';
 
 export default function createBotClient(): BotClient {
   Logger.info('Creating bot client...');

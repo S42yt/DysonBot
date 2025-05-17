@@ -4,9 +4,9 @@ import {
   CommandInteractionOptionResolver,
   MessageFlags,
 } from 'discord.js';
-import { Command } from '../../../core';
-import { Embed } from '../../../types/embed';
-import Logger from '../../../utils/logger';
+import { Command } from '../../../core/index.js';
+import { Embed } from '../../../types/embed.js';
+import Logger from '../../../utils/logger.js';
 
 export default new Command(
   {
@@ -63,7 +63,7 @@ export default new Command(
     await interaction.reply({
       embeds: [
         Embed.success(
-          `Your message will be sent to the channel`,
+          'Your message will be sent to the channel',
           'Message Sending'
         ),
       ],

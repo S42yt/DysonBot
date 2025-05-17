@@ -1,7 +1,7 @@
 import { CommandInteraction } from 'discord.js';
-import { Command, DatabaseHandler } from '../../../core';
-import { Embed } from '../../../types/embed';
-import Logger from '../../../utils/logger';
+import { Command, DatabaseHandler } from '../../../core/index.js';
+import { Embed } from '../../../types/embed.js';
+import Logger from '../../../utils/logger.js';
 
 export default new Command(
   {

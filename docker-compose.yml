@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  bot:
+    build: .
+    restart: unless-stopped
+    environment:
+      - BOT_TOKEN=${BOT_TOKEN}
+      - CLIENT_ID=${CLIENT_ID}
+      - GUILD_ID=${GUILD_ID}
+      - MONGODB_URI=${GUILD_ID}
+      - DB_NAME=dysonBot
+      - CLAN_ROLE=${CLAN_ROLE}
+      - WELCOME_CHANNEL=${WELCOME_CHANNEL}
+      - JOIN_ROLE=${JOIN_ROLE}
+    volumes:
+      - ./logs:/app/logs
+      - ./assets:/app/assets
+    networks:
+      - bot-network
+
+networks:
+  bot-network:
+    driver: bridge
