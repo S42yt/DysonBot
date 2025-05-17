@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionData, Collection, REST, Routes } from "discord.js";
+import { Collection, REST, Routes, PermissionFlagsBits } from "discord.js";
 import { readdirSync } from "fs";
 import path from "path";
 import { BotClient, Command } from "../../types/discord.js";
@@ -15,6 +15,15 @@ class CommandHandler {
     this.client.commands = new Collection<string, Command>();
   }
 
+  private getPermissionName(permissionValue: string): string {
+    for (const [key, value] of Object.entries(PermissionFlagsBits)) {
+      if (value.toString() === permissionValue) {
+        return key;
+      }
+    }
+    return "Unknown Permission";
+  }
+
   public async loadCommand(
     moduleName: string,
     commandPath: string
@@ -27,11 +36,21 @@ class CommandHandler {
       const commandFile = await import(commandPath);
       const command = commandFile.default || commandFile;
 
-      if (!command.data || !command.execute) {
+      if (!command.builder || !command.execute) {
+        Logger.warn(`Command at ${commandPath} is missing builder or execute property`);
         return null;
       }
 
-      const commandName = command.data.name;
+      // Get command name from the builder which is the authoritative source
+      const commandName = command.builder.name;
+      if (!commandName) {
+        Logger.warn(`Command at ${commandPath} has no name defined in builder`);
+        return null;
+      }
+      
+      // Store the name in the command object for easier access
+      command.name = commandName;
+      
       if (!this.configHandler.isCommandEnabled(moduleName, commandName)) {
         return null;
       }
@@ -74,7 +93,7 @@ class CommandHandler {
         const command = await this.loadCommand(moduleName, commandPath);
 
         if (command) {
-          commands.set(command.data.name, command);
+          commands.set(command.name, command);
         }
       }
 
@@ -96,30 +115,19 @@ class CommandHandler {
 
     const rest = new REST({ version: "10" }).setToken(config.token);
 
-    
     const commands = Array.from(this.client.commands.values()).map(command => {
+      // Get the JSON data from the builder for API submission
+      const jsonData = command.builder.toJSON();
       
-      const commandData: {
-        name: string;
-        description: string;
-        options: ApplicationCommandOptionData[];
-        dmPermission: boolean;
-        defaultMemberPermissions?: string;
-      } = {
-        name: command.data.name,
-        description: command.data.description,
-        options: command.data.options || [],
-        dmPermission: command.data.dmPermission ?? false
-      };
-      
-      
-      
-      if (command.data.defaultMemberPermissions) {
-        commandData.defaultMemberPermissions = "8";
-        Logger.info(`Restricting command ${command.data.name} to administrators`);
+      // Log the permission information if available
+      if (jsonData.default_member_permissions) {
+        const permName = this.getPermissionName(jsonData.default_member_permissions);
+        Logger.info(`Command "${jsonData.name}" requires permission: ${permName} (${jsonData.default_member_permissions})`);
+      } else {
+        Logger.info(`Command "${jsonData.name}" has no permission restrictions`);
       }
       
-      return commandData;
+      return jsonData;
     });
 
     if (commands.length === 0) {
@@ -130,13 +138,11 @@ class CommandHandler {
     try {
       Logger.info(`Registering ${commands.length} application commands`);
       
-      
       Logger.info("Clearing existing commands...");
       await rest.put(
         Routes.applicationGuildCommands(config.clientId, config.guildId),
         { body: [] }
       );
-      
       
       Logger.info("Registering updated commands...");
       await rest.put(

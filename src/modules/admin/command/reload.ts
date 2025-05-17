@@ -2,29 +2,30 @@ import {
   CommandInteraction,
   PermissionFlagsBits,
   CommandInteractionOptionResolver,
+  SlashCommandBuilder,
 } from "discord.js";
-import { Command, ModuleHandler } from "../../../core/index.js";
+import { ModuleHandler } from "../../../core/index.js";
 import { Embed } from "../../../types/embed.js";
 import { BotClient } from "../../../types/discord.js";
 import ConfigHandler from "../../../utils/configHandler.js";
 import Logger from "../../../utils/logger.js";
 
-export default new Command(
-  {
-    name: "reload",
-    description: "Reload all modules and optionally configuration",
-    defaultMemberPermissions: PermissionFlagsBits.Administrator,
-    dmPermission: false, 
-    options: [
-      {
-        name: "config",
-        description: "Whether to also reload the configuration",
-        type: 5,
-        required: false,
-      },
-    ],
-  },
-  async (interaction: CommandInteraction) => {
+class ReloadCommand {
+  public readonly name = "reload";
+  public readonly module = "admin";
+
+  public builder = new SlashCommandBuilder()
+    .setName(this.name)
+    .setDescription("Reload all modules and optionally configuration")
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+    .addBooleanOption((option) =>
+      option
+        .setName("config")
+        .setDescription("Whether to also reload the configuration")
+        .setRequired(false)
+    );
+
+  public async execute(interaction: CommandInteraction): Promise<void> {
     if (!interaction.memberPermissions?.has(PermissionFlagsBits.Administrator)) {
       await interaction.reply({
         embeds: [
@@ -103,6 +104,7 @@ export default new Command(
         ],
       });
     }
-  },
-  "admin"
-);
+  }
+}
+
+export default new ReloadCommand();

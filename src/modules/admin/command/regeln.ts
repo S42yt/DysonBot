@@ -2,22 +2,24 @@ import {
   CommandInteraction,
   PermissionFlagsBits,
   MessageFlags,
-  AttachmentBuilder
+  AttachmentBuilder,
+  SlashCommandBuilder
 } from "discord.js";
-import { Command } from "../../../core/index.js";
 import { Embed } from "../../../types/embed.js";
 import Logger from "../../../utils/logger.js";
 import path from "path";
 import fs from "fs";
 
-export default new Command(
-  {
-    name: "regeln",
-    description: "Sendet eine Embed-Nachricht mit den Serverregeln",
-    defaultMemberPermissions: PermissionFlagsBits.Administrator,
-    dmPermission: false,
-  },
-  async (interaction: CommandInteraction) => {
+class RegelnCommand {
+  public readonly name = "regeln";
+  public readonly module = "admin";
+
+  public builder = new SlashCommandBuilder()
+    .setName(this.name)
+    .setDescription("Sendet eine Embed-Nachricht mit den Serverregeln")
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
+ 
+  public async execute(interaction: CommandInteraction): Promise<void> {
     if (!interaction.memberPermissions?.has(PermissionFlagsBits.Administrator)) {
       await interaction.reply({
         embeds: [
@@ -123,6 +125,7 @@ export default new Command(
         ],
       });
     }
-  },
-  "admin"
-);
+  }
+}
+
+export default new RegelnCommand();

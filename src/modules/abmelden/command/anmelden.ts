@@ -1,16 +1,22 @@
-import { CommandInteraction, GuildMember } from "discord.js";
-import { Command } from "../../../core/index.js";
+import { 
+  CommandInteraction, 
+  GuildMember, 
+  SlashCommandBuilder 
+} from "discord.js";
 import { Embed } from "../../../types/embed.js";
 import { MemberStatusModel } from "../schema/memberStatus.js";
 import Logger from "../../../utils/logger.js";
 import ConfigHandler from "../../../utils/configHandler.js";
 
-export default new Command(
-  {
-    name: "anmelden",
-    description: "Markiere dich als zurückgekehrt/anwesend",
-  },
-  async (interaction: CommandInteraction): Promise<void> => {
+class AnmeldenCommand {
+  public readonly name = "anmelden";
+  public readonly module = "abmelden";
+
+  public builder = new SlashCommandBuilder()
+    .setName(this.name)
+    .setDescription("Markiere dich als zurückgekehrt/anwesend");
+
+  public async execute(interaction: CommandInteraction): Promise<void> {
     try {
       const member = interaction.member as GuildMember;
       const configHandler = ConfigHandler.getInstance();
@@ -106,6 +112,7 @@ export default new Command(
         });
       }
     }
-  },
-  "abmelden"
-);
+  }
+}
+
+export default new AnmeldenCommand();

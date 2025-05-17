@@ -1,5 +1,9 @@
-import { CommandInteraction, GuildMember } from "discord.js";
-import { Command } from "../../../core/index.js";
+import {
+  CommandInteraction,
+  GuildMember,
+  SlashCommandBuilder,
+  CommandInteractionOptionResolver,
+} from "discord.js";
 import { Embed } from "../../../types/embed.js";
 import { MemberStatusModel } from "../schema/memberStatus.js";
 import {
@@ -9,26 +13,27 @@ import {
 import Logger from "../../../utils/logger.js";
 import ConfigHandler from "../../../utils/configHandler.js";
 
-export default new Command(
-  {
-    name: "abmelden",
-    description: "Markiere dich als abwesend",
-    options: [
-      {
-        name: "zeit",
-        description: "Wie lange wirst du abwesend sein (Format: 1d2h3m4s)",
-        type: 3,
-        required: true,
-      },
-      {
-        name: "grund",
-        description: "Grund für deine Abwesenheit",
-        type: 3,
-        required: true,
-      },
-    ],
-  },
-  async (interaction: CommandInteraction): Promise<void> => {
+class AbmeldenCommand {
+  public readonly name = "abmelden";
+  public readonly module = "abmelden";
+
+  public builder = new SlashCommandBuilder()
+    .setName(this.name)
+    .setDescription("Markiere dich als abwesend")
+    .addStringOption((option) =>
+      option
+        .setName("zeit")
+        .setDescription("Wie lange wirst du abwesend sein (Format: 1d2h3m4s)")
+        .setRequired(true)
+    )
+    .addStringOption((option) =>
+      option
+        .setName("grund")
+        .setDescription("Grund für deine Abwesenheit")
+        .setRequired(true)
+    );
+
+  public async execute(interaction: CommandInteraction): Promise<void> {
     try {
       const member = interaction.member as GuildMember;
       const configHandler = ConfigHandler.getInstance();
@@ -50,8 +55,22 @@ export default new Command(
         return;
       }
 
-      const timeStr = interaction.options.get("zeit")?.value as string;
-      const reason = interaction.options.get("grund")?.value as string;
+      const timeStr = (interaction.options as CommandInteractionOptionResolver).getString("zeit");
+      const reason = (interaction.options as CommandInteractionOptionResolver).getString("grund") || undefined;
+
+      if (!timeStr) {
+        await interaction.reply({
+          embeds: [
+            new Embed({
+              title: "❌ Fehlende Angabe",
+              description: "Du musst eine Zeitdauer angeben.",
+              color: "#ED4245",
+            }),
+          ],
+          ephemeral: true,
+        });
+        return;
+      }
 
       const duration = parseDuration(timeStr);
       if (!duration) {
@@ -104,7 +123,7 @@ export default new Command(
           },
           {
             name: "📝 Grund",
-            value: reason,
+            value: reason ?? "Kein Grund angegeben",
             inline: true,
           },
         ],
@@ -143,6 +162,7 @@ export default new Command(
         });
       }
     }
-  },
-  "abmelden"
-);
+  }
+}
+
+export default new AbmeldenCommand();

@@ -1,14 +1,17 @@
-import { CommandInteraction } from "discord.js";
-import { Command, DatabaseHandler } from "../../../core/index.js";
+import { CommandInteraction, SlashCommandBuilder } from "discord.js";
+import { DatabaseHandler } from "../../../core/index.js";
 import { Embed } from "../../../types/embed.js";
 import Logger from "../../../utils/logger.js";
 
-export default new Command(
-  {
-    name: "ping",
-    description: "Replies with the bot latency and database status",
-  },
-  async (interaction: CommandInteraction) => {
+class PingCommand {
+  public readonly name = "ping";
+  public readonly module = "misc";
+
+  public builder = new SlashCommandBuilder()
+    .setName(this.name)
+    .setDescription("Replies with the bot latency and database status");
+
+  public async execute(interaction: CommandInteraction): Promise<void> {
     const startTime = Date.now();
 
     const ping = interaction.client.ws.ping;
@@ -54,6 +57,7 @@ export default new Command(
     });
 
     await interaction.editReply({ embeds: [embed] });
-  },
-  "misc"
-);
+  }
+}
+
+export default new PingCommand();

@@ -3,22 +3,24 @@ import {
   Guild,
   Role,
   PermissionFlagsBits,
+  SlashCommandBuilder
 } from "discord.js";
-import { Command } from "../../../core/index.js";
 import { Embed } from "../../../types/embed.js";
 import { MemberStatusModel } from "../schema/memberStatus.js";
 import Logger from "../../../utils/logger.js";
 import ConfigHandler from "../../../utils/configHandler.js";
 import { formatDuration } from "../../../utils/durationHandler.js";
 
-export default new Command(
-  {
-    name: "abmeldungen",
-    description: "Zeige alle Mitglieder mit ihrem aktuellen Status an",
-    defaultMemberPermissions: PermissionFlagsBits.Administrator,
-    dmPermission: false,
-  },
-  async (interaction: CommandInteraction): Promise<void> => {
+class AbmeldungenCommand {
+  public readonly name = "abmeldungen";
+  public readonly module = "abmelden";
+
+  public builder = new SlashCommandBuilder()
+    .setName(this.name)
+    .setDescription("Zeige alle Mitglieder mit ihrem aktuellen Status an")
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
+
+  public async execute(interaction: CommandInteraction): Promise<void> {
     try {
       if (!interaction.memberPermissions?.has(PermissionFlagsBits.Administrator)) {
         await interaction.reply({
@@ -37,7 +39,6 @@ export default new Command(
       const configHandler = ConfigHandler.getInstance();
       const moduleEnv = configHandler.getModuleEnv("abmelden");
       const clanRoleId = moduleEnv.role;
-
 
       await interaction.deferReply();
 
@@ -166,6 +167,7 @@ export default new Command(
         });
       }
     }
-  },
-  "abmelden"
-);
+  }
+}
+
+export default new AbmeldungenCommand();

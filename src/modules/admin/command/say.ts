@@ -2,28 +2,28 @@ import {
   CommandInteraction,
   PermissionFlagsBits,
   CommandInteractionOptionResolver,
-  MessageFlags,
+  SlashCommandBuilder,
+  MessageFlags
 } from "discord.js";
-import { Command } from "../../../core/index.js";
 import { Embed } from "../../../types/embed.js";
 import Logger from "../../../utils/logger.js";
 
-export default new Command(
-  {
-    name: "say",
-    description: "Make the bot say a message",
-    defaultMemberPermissions: PermissionFlagsBits.Administrator,
-    dmPermission: false,
-    options: [
-      {
-        name: "message",
-        description: "The message to send",
-        type: 3,
-        required: true,
-      },
-    ],
-  },
-  async (interaction: CommandInteraction) => {
+class SayCommand {
+  public readonly name = "say";
+  public readonly module = "admin";
+
+  public builder = new SlashCommandBuilder()
+    .setName(this.name)
+    .setDescription("Make the bot say a message")
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+    .addStringOption((option) =>
+      option
+        .setName("message")
+        .setDescription("The message to send")
+        .setRequired(true)
+    );
+
+  public async execute(interaction: CommandInteraction): Promise<void> {
     if (!interaction.memberPermissions?.has(PermissionFlagsBits.Administrator)) {
       await interaction.reply({
         embeds: [
@@ -32,7 +32,7 @@ export default new Command(
             "Permission Denied"
           ),
         ],
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral
       });
       return;
     }
@@ -44,7 +44,7 @@ export default new Command(
     if (!message) {
       await interaction.reply({
         embeds: [Embed.error("Please provide a message to send", "Error")],
-        flags: MessageFlags.Ephemeral,
+        flags: MessageFlags.Ephemeral
       });
       return;
     }
@@ -59,7 +59,7 @@ export default new Command(
             "Error"
           ),
         ],
-        flags: MessageFlags.Ephemeral,
+        flags: MessageFlags.Ephemeral
       });
       return;
     }
@@ -69,7 +69,7 @@ export default new Command(
         embeds: [
           Embed.error("Cannot send messages to this channel type", "Error"),
         ],
-        flags: MessageFlags.Ephemeral,
+        flags: MessageFlags.Ephemeral
       });
       return;
     }
@@ -81,7 +81,7 @@ export default new Command(
           "Message Sending"
         ),
       ],
-      flags: MessageFlags.Ephemeral,
+      flags: MessageFlags.Ephemeral
     });
 
     try {
@@ -103,6 +103,7 @@ export default new Command(
         ],
       });
     }
-  },
-  "admin"
-);
+  }
+}
+
+export default new SayCommand();

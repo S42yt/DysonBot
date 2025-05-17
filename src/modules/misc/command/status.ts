@@ -1,16 +1,19 @@
-import { CommandInteraction, version as discordJsVersion } from "discord.js";
-import { Command, DatabaseHandler } from "../../../core/index.js";
+import { CommandInteraction, version as discordJsVersion, SlashCommandBuilder } from "discord.js";
+import { DatabaseHandler } from "../../../core/index.js";
 import { Embed } from "../../../types/embed.js";
 import os from "os";
 import process from "process";
 import Logger from "../../../utils/logger.js";
 
-export default new Command(
-  {
-    name: "status",
-    description: "Shows bot status and system information",
-  },
-  async (interaction: CommandInteraction) => {
+class StatusCommand {
+  public readonly name = "status";
+  public readonly module = "misc";
+
+  public builder = new SlashCommandBuilder()
+    .setName(this.name)
+    .setDescription("Shows bot status and system information");
+
+  public async execute(interaction: CommandInteraction): Promise<void> {
     await interaction.deferReply();
 
     const client = interaction.client;
@@ -102,9 +105,8 @@ export default new Command(
     });
 
     await interaction.editReply({ embeds: [embed] });
-  },
-  "misc"
-);
+  }
+}
 
 function formatUptime(ms: number): string {
   const seconds = Math.floor(ms / 1000);
@@ -114,3 +116,5 @@ function formatUptime(ms: number): string {
 
   return `${days}d ${hours % 24}h ${minutes % 60}m ${seconds % 60}s`;
 }
+
+export default new StatusCommand();
