@@ -66,7 +66,7 @@ class CommandHandler {
       }
 
       const commandFiles = readdirSync(commandsDir).filter(file =>
-        file.endsWith(".js")
+        file.endsWith(".js") || file.endsWith(".ts")
       );
 
       for (const file of commandFiles) {
