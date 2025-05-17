@@ -18,8 +18,11 @@
       };
       events = {
         rpc = true;
+        boost = true;
       };
-      env = { };
+      env = { 
+        boostChannel = "$BOOST_CHANNEL";
+      };
     },
     {
       name = "admin";
