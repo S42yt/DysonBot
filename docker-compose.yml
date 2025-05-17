@@ -5,6 +5,7 @@ services:
     build: .
     restart: unless-stopped
     environment:
+      - NODE_ENV=development
       - BOT_TOKEN=${BOT_TOKEN}
       - CLIENT_ID=${CLIENT_ID}
       - GUILD_ID=${GUILD_ID}
