@@ -24,7 +24,8 @@ class Module implements ModuleInterface {
     this.name = options.name;
     this.description = options.description;
     this.commands = options.commands || new Collection<string, Command>();
-    this.events = options.events || new Collection<string, Event<keyof ClientEvents>>();
+    this.events =
+      options.events || new Collection<string, Event<keyof ClientEvents>>();
     this.init = options.init;
     this.enabled = options.enabled ?? false;
   }

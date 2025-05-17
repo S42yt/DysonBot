@@ -35,6 +35,7 @@ class ConfigHandler {
 
       cleanContent = cleanContent.replace(/}(\s*){/g, "},\n$1{");
 
+      // prettier-ignore
       let jsonLike = cleanContent
         .replace(/(\w+)\s*=/g, "\"$1\":")
         .replace(/;/g, ",")
