@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   bot:
     build: .
@@ -17,6 +15,7 @@ services:
     volumes:
       - ./logs:/app/logs
       - ./assets:/app/assets
+      - ./config.nix:/app/config.nix
     networks:
       - bot-network
 

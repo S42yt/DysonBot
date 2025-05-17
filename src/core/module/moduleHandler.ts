@@ -78,7 +78,14 @@ class ModuleHandler {
       }
 
       const indexPath = path.join(moduleDir, "index.ts");
-      let moduleInfo: any = {
+      interface ModuleInfo {
+        name: string;
+        description: string;
+        init?: (client: BotClient) => Promise<void>;
+        [key: string]: string | ((client: BotClient) => Promise<void>) | undefined;
+      }
+      
+      let moduleInfo: ModuleInfo = {
         name: moduleName,
         description: `Module ${moduleName}`,
       };
@@ -113,7 +120,9 @@ class ModuleHandler {
         description: moduleInfo.description,
         commands,
         events,
-        init: moduleInfo.init,
+        init: moduleInfo.init 
+          ? (client => moduleInfo.init!(client as unknown as BotClient)) 
+          : undefined,
         enabled: true,
       });
 

@@ -39,7 +39,7 @@ export interface Module {
   name: string;
   description: string;
   commands: Collection<string, Command>;
-  events: Collection<string, Event<any>>;
+  events: Collection<string, Event<keyof ClientEvents>>;
   init?: (client: Client) => Promise<void>;
   enabled: boolean;
 }
@@ -51,5 +51,5 @@ export interface BotClientOptions {
 export interface BotClient extends Client {
   commands: Collection<string, Command>;
   modules: Collection<string, Module>;
-  events: Collection<string, Event<any>>;
+  events: Collection<string, Event<keyof ClientEvents>>;
 }

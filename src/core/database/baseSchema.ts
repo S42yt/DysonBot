@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { Document, Schema, UpdateWriteOpResult } from "mongoose";
 import DatabaseHandler from "./databaseHandler.js";
 
 abstract class BaseSchema<T extends Document> {
@@ -82,7 +82,7 @@ abstract class BaseSchema<T extends Document> {
     filter: object,
     update: object,
     options: object = {}
-  ): Promise<any> {
+  ): Promise<UpdateWriteOpResult> {
     await this.ensureConnected();
     return await this.model.updateOne(filter, update, options).exec();
   }
@@ -98,7 +98,7 @@ abstract class BaseSchema<T extends Document> {
     filter: object,
     update: object,
     options: object = {}
-  ): Promise<any> {
+  ): Promise<UpdateWriteOpResult> {
     await this.ensureConnected();
     return await this.model.updateMany(filter, update, options).exec();
   }
@@ -108,7 +108,7 @@ abstract class BaseSchema<T extends Document> {
    * @param filter Filter criteria
    * @returns Delete result
    */
-  async deleteOne(filter: object): Promise<any> {
+  async deleteOne(filter: object): Promise<mongoose.DeleteResult> {
     await this.ensureConnected();
     return await this.model.deleteOne(filter).exec();
   }
@@ -118,7 +118,7 @@ abstract class BaseSchema<T extends Document> {
    * @param filter Filter criteria
    * @returns Delete result
    */
-  async deleteMany(filter: object): Promise<any> {
+  async deleteMany(filter: object): Promise<mongoose.DeleteResult> {
     await this.ensureConnected();
     return await this.model.deleteMany(filter).exec();
   }

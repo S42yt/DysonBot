@@ -11,7 +11,7 @@ class Logger {
   private static logWithColor(
     level: LogLevel,
     message: string,
-    ...args: any[]
+    ...args: unknown[]
   ): void {
     const timestamp = this.getTimestamp();
     let coloredLevel: string;
@@ -34,19 +34,19 @@ class Logger {
     console.log(chalk.gray(timestamp), coloredLevel, message, ...args);
   }
 
-  public static log(message: string, ...args: any[]): void {
+  public static log(message: string, ...args: unknown[]): void {
     this.logWithColor("LOG", message, ...args);
   }
 
-  public static info(message: string, ...args: any[]): void {
+  public static info(message: string, ...args: unknown[]): void {
     this.logWithColor("INFO", message, ...args);
   }
 
-  public static warn(message: string, ...args: any[]): void {
+  public static warn(message: string, ...args: unknown[]): void {
     this.logWithColor("WARNING", message, ...args);
   }
 
-  public static error(message: string, ...args: any[]): void {
+  public static error(message: string, ...args: unknown[]): void {
     this.logWithColor("ERROR", message, ...args);
   }
 }

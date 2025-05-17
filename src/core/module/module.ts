@@ -1,4 +1,4 @@
-import { Client, Collection } from "discord.js";
+import { Client, Collection, ClientEvents } from "discord.js";
 import {
   Command,
   Event,
@@ -9,7 +9,7 @@ class Module implements ModuleInterface {
   public readonly name: string;
   public readonly description: string;
   public readonly commands: Collection<string, Command>;
-  public readonly events: Collection<string, Event<any>>;
+  public readonly events: Collection<string, Event<keyof ClientEvents>>;
   public readonly init?: (client: Client) => Promise<void>;
   public enabled: boolean;
 
@@ -17,14 +17,14 @@ class Module implements ModuleInterface {
     name: string;
     description: string;
     commands?: Collection<string, Command>;
-    events?: Collection<string, Event<any>>;
+    events?: Collection<string, Event<keyof ClientEvents>>;
     init?: (client: Client) => Promise<void>;
     enabled?: boolean;
   }) {
     this.name = options.name;
     this.description = options.description;
     this.commands = options.commands || new Collection<string, Command>();
-    this.events = options.events || new Collection<string, Event<any>>();
+    this.events = options.events || new Collection<string, Event<keyof ClientEvents>>();
     this.init = options.init;
     this.enabled = options.enabled ?? false;
   }

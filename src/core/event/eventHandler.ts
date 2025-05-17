@@ -1,4 +1,4 @@
-import { Collection } from "discord.js";
+import { Collection, ClientEvents } from "discord.js";
 import { readdirSync } from "fs";
 import path from "path";
 import { BotClient, Event } from "../../types/discord.js";
@@ -12,13 +12,13 @@ class EventHandler {
   constructor(client: BotClient) {
     this.client = client;
     this.configHandler = ConfigHandler.getInstance();
-    this.client.events = new Collection<string, Event<any>>();
+    this.client.events = new Collection<string, Event<keyof ClientEvents>>();
   }
 
-  public async loadEvent(
+  public async loadEvent<K extends keyof ClientEvents>(
     moduleName: string,
     eventPath: string
-  ): Promise<Event<any> | null> {
+  ): Promise<Event<K> | null> {
     try {
       if (!this.configHandler.isModuleEnabled(moduleName)) {
         return null;
@@ -64,8 +64,8 @@ class EventHandler {
   public async loadEventsFromModule(
     moduleName: string,
     moduleDir: string
-  ): Promise<Collection<string, Event<any>>> {
-    const events = new Collection<string, Event<any>>();
+  ): Promise<Collection<string, Event<keyof ClientEvents>>> {
+    const events = new Collection<string, Event<keyof ClientEvents>>();
 
     if (!this.configHandler.isModuleEnabled(moduleName)) {
       Logger.info(`Skipping events from disabled module: ${moduleName}`);

@@ -4,7 +4,7 @@ export interface ConfigModule {
   commands?: Record<string, boolean>;
   events?: Record<string, boolean>;
   env?: Record<string, string>;
-  options?: Record<string, any>;
+  options?: Record<string, string | number | boolean | object>;
 }
 
 export interface BotConfig {
@@ -23,5 +23,5 @@ export interface ModuleConfig {
   commands: Record<string, boolean>;
   events: Record<string, boolean>;
   env: Record<string, string>;
-  options?: Record<string, any>;
+  options?: Record<string, string | number | boolean | object>;
 }

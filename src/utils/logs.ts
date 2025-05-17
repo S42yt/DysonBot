@@ -38,28 +38,28 @@ class LogManager {
     const originalConsoleWarn = console.warn;
     const originalConsoleError = console.error;
 
-    console.log = (...args: any[]) => {
+    console.log = (...args: unknown[]) => {
       this.captureLog("LOG", args);
       originalConsoleLog.apply(console, args);
     };
 
-    console.info = (...args: any[]) => {
+    console.info = (...args: unknown[]) => {
       this.captureLog("INFO", args);
       originalConsoleInfo.apply(console, args);
     };
 
-    console.warn = (...args: any[]) => {
+    console.warn = (...args: unknown[]) => {
       this.captureLog("WARN", args);
       originalConsoleWarn.apply(console, args);
     };
 
-    console.error = (...args: any[]) => {
+    console.error = (...args: unknown[]) => {
       this.captureLog("ERROR", args);
       originalConsoleError.apply(console, args);
     };
   }
 
-  private captureLog(level: string, args: any[]): void {
+  private captureLog(level: string, args: unknown[]): void {
     const timestamp = new Date().toISOString();
     const logMessage = `[${timestamp}] [${level}] ${args
       .map(arg => (typeof arg === "object" ? JSON.stringify(arg) : String(arg)))
