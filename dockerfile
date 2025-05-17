@@ -1,11 +1,10 @@
 FROM node:23-alpine
 
-# Create app directory
 WORKDIR /app
 
 RUN apk add --no-cache python3 make g++ cairo-dev pango-dev jpeg-dev giflib-dev librsvg-dev
 
-RUN npm install -g bun
+RUN curl -fsSL https://bun.sh/install | bash
 
 COPY package.json bun.lockb ./
 
