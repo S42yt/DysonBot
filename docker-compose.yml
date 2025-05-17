@@ -8,7 +8,7 @@ services:
       - CLIENT_ID=${CLIENT_ID}
       - GUILD_ID=${GUILD_ID}
       - MONGODB_URI=${MONGODB_URI}
-      - DB_NAME=dysonBot
+      - DB_NAME=${DB_NAME}
       - CLAN_ROLE=${CLAN_ROLE}
       - WELCOME_CHANNEL=${WELCOME_CHANNEL}
       - JOIN_ROLE=${JOIN_ROLE}
