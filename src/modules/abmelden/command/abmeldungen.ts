@@ -3,7 +3,7 @@ import {
   Guild,
   Role,
   PermissionFlagsBits,
-  SlashCommandBuilder
+  SlashCommandBuilder,
 } from "discord.js";
 import { Embed } from "../../../types/embed.js";
 import { MemberStatusModel } from "../schema/memberStatus.js";
@@ -22,7 +22,9 @@ class AbmeldungenCommand {
 
   public async execute(interaction: CommandInteraction): Promise<void> {
     try {
-      if (!interaction.memberPermissions?.has(PermissionFlagsBits.Administrator)) {
+      if (
+        !interaction.memberPermissions?.has(PermissionFlagsBits.Administrator)
+      ) {
         await interaction.reply({
           embeds: [
             Embed.error(
@@ -50,7 +52,7 @@ class AbmeldungenCommand {
       });
 
       const statusMap = new Map(
-        memberStatuses.map((status) => [status.userId, status])
+        memberStatuses.map(status => [status.userId, status])
       );
 
       const angemeldetFields = [];

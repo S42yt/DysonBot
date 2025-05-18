@@ -61,6 +61,40 @@
         welcomeChannel = "$WELCOME_CHANNEL";
         joinRole = "$JOIN_ROLE";
       };
+    },
+    {
+      name = "logging";
+      enabled = true;
+      events = {
+        # message logging
+        messageDelete = true;
+        messageEdit = true;
+        messageCreate = false;
+        # audit logging
+        memberLeave = true;
+        memberJoin = false;
+        memberUpdate = false;
+        # moderation logging
+        memberBan = true;
+        memberUnban = true;
+        memberTimeout = true;
+        memberUntimeout = true;
+        # role logging
+        roleCreate = true;
+        roleDelete = true;
+        roleUpdate = true;
+        # channel logging
+        channelCreate = false;
+        channelDelete = false;
+        channelUpdate = false;
+        # voice logging
+        voiceMemberMove = true;
+        voiceMemberJoin = true;
+        voiceMemberLeave = true;
+      };
+      env = {
+        logChannel = "$LOG_CHANNEL";
+      };
     }
   ];
 }

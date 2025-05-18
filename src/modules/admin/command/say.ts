@@ -3,7 +3,7 @@ import {
   PermissionFlagsBits,
   CommandInteractionOptionResolver,
   SlashCommandBuilder,
-  MessageFlags
+  MessageFlags,
 } from "discord.js";
 import { Embed } from "../../../types/embed.js";
 import Logger from "../../../utils/logger.js";
@@ -16,7 +16,7 @@ class SayCommand {
     .setName(this.name)
     .setDescription("Make the bot say a message")
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
-    .addStringOption((option) =>
+    .addStringOption(option =>
       option
         .setName("message")
         .setDescription("The message to send")
@@ -24,7 +24,9 @@ class SayCommand {
     );
 
   public async execute(interaction: CommandInteraction): Promise<void> {
-    if (!interaction.memberPermissions?.has(PermissionFlagsBits.Administrator)) {
+    if (
+      !interaction.memberPermissions?.has(PermissionFlagsBits.Administrator)
+    ) {
       await interaction.reply({
         embeds: [
           Embed.error(
@@ -32,7 +34,7 @@ class SayCommand {
             "Permission Denied"
           ),
         ],
-        flags: MessageFlags.Ephemeral
+        flags: MessageFlags.Ephemeral,
       });
       return;
     }
@@ -44,7 +46,7 @@ class SayCommand {
     if (!message) {
       await interaction.reply({
         embeds: [Embed.error("Please provide a message to send", "Error")],
-        flags: MessageFlags.Ephemeral
+        flags: MessageFlags.Ephemeral,
       });
       return;
     }
@@ -59,7 +61,7 @@ class SayCommand {
             "Error"
           ),
         ],
-        flags: MessageFlags.Ephemeral
+        flags: MessageFlags.Ephemeral,
       });
       return;
     }
@@ -69,7 +71,7 @@ class SayCommand {
         embeds: [
           Embed.error("Cannot send messages to this channel type", "Error"),
         ],
-        flags: MessageFlags.Ephemeral
+        flags: MessageFlags.Ephemeral,
       });
       return;
     }
@@ -81,7 +83,7 @@ class SayCommand {
           "Message Sending"
         ),
       ],
-      flags: MessageFlags.Ephemeral
+      flags: MessageFlags.Ephemeral,
     });
 
     try {

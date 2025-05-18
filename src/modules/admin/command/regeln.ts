@@ -3,7 +3,7 @@ import {
   PermissionFlagsBits,
   MessageFlags,
   AttachmentBuilder,
-  SlashCommandBuilder
+  SlashCommandBuilder,
 } from "discord.js";
 import { Embed } from "../../../types/embed.js";
 import Logger from "../../../utils/logger.js";
@@ -18,9 +18,11 @@ class RegelnCommand {
     .setName(this.name)
     .setDescription("Sendet eine Embed-Nachricht mit den Serverregeln")
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
- 
+
   public async execute(interaction: CommandInteraction): Promise<void> {
-    if (!interaction.memberPermissions?.has(PermissionFlagsBits.Administrator)) {
+    if (
+      !interaction.memberPermissions?.has(PermissionFlagsBits.Administrator)
+    ) {
       await interaction.reply({
         embeds: [
           Embed.error(
@@ -32,11 +34,11 @@ class RegelnCommand {
       });
       return;
     }
-    
+
     await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-    
+
     const channel = interaction.channel;
-    
+
     if (!channel || !channel.isTextBased()) {
       await interaction.editReply({
         embeds: [
@@ -48,14 +50,19 @@ class RegelnCommand {
       });
       return;
     }
-    
+
     if (!("send" in channel)) {
       await interaction.editReply({
-        embeds: [Embed.error("This channel type doesn't support sending messages", "Error")],
+        embeds: [
+          Embed.error(
+            "This channel type doesn't support sending messages",
+            "Error"
+          ),
+        ],
       });
       return;
     }
-    
+
     try {
       const guild = interaction.guild;
       if (!guild) {
@@ -64,27 +71,30 @@ class RegelnCommand {
         });
         return;
       }
-      
-      const targetUser = await interaction.client.users.fetch("777516207984607273")
+
+      const targetUser = await interaction.client.users
+        .fetch("777516207984607273")
         .catch(() => null);
-      
+
       const imagePath = path.join(process.cwd(), "assets", "regeln.gif");
-      
+
       if (!fs.existsSync(imagePath)) {
         Logger.error(`Image not found at ${imagePath}`);
         await interaction.editReply({
-          embeds: [Embed.error("Rules image not found in assets folder", "Error")],
+          embeds: [
+            Embed.error("Rules image not found in assets folder", "Error"),
+          ],
         });
         return;
       }
-      
+
       const attachment = new AttachmentBuilder(imagePath, {
         name: "regeln.gif",
       });
-      
+
       const rulesEmbed = new Embed({
         title: "Dyson Discord Regeln :sparkles:",
-        description: 
+        description:
           "- 1. Keine NSFW inhalte in jeglicher form :angry: \n\n" +
           "- 2. Spammen ist auch uncool :broken_heart:\n\n" +
           "- 3. Sei kein bastard :thumbsup:\n\n" +
@@ -93,29 +103,31 @@ class RegelnCommand {
           "Oki das wars >w<",
         color: "#EB94E3",
         thumbnail: guild.iconURL({ size: 256 }) ?? undefined,
-        image: "attachment://regeln.gif", 
+        image: "attachment://regeln.gif",
         footer: {
           text: targetUser ? targetUser.username : "Dyson Clan",
-          iconURL: targetUser ? targetUser.displayAvatarURL({ size: 128 }) : undefined,
+          iconURL: targetUser
+            ? targetUser.displayAvatarURL({ size: 128 })
+            : undefined,
         },
       });
-      
-      await channel.send({ 
+
+      await channel.send({
         embeds: [rulesEmbed],
-        files: [attachment]
+        files: [attachment],
       });
-      
+
       await interaction.editReply({
         embeds: [Embed.success("Rules message has been sent", "Success")],
       });
-      
+
       const channelName = "name" in channel ? channel.name : "unknown";
       Logger.info(
         `Admin ${interaction.user.tag} used the regeln command in #${channelName} (${channel.id})`
       );
     } catch (error) {
       Logger.error("Error in regeln command:", error);
-      
+
       await interaction.editReply({
         embeds: [
           Embed.error(

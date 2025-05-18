@@ -37,7 +37,9 @@ class CommandHandler {
       const command = commandFile.default || commandFile;
 
       if (!command.builder || !command.execute) {
-        Logger.warn(`Command at ${commandPath} is missing builder or execute property`);
+        Logger.warn(
+          `Command at ${commandPath} is missing builder or execute property`
+        );
         return null;
       }
 
@@ -47,10 +49,10 @@ class CommandHandler {
         Logger.warn(`Command at ${commandPath} has no name defined in builder`);
         return null;
       }
-      
+
       // Store the name in the command object for easier access
       command.name = commandName;
-      
+
       if (!this.configHandler.isCommandEnabled(moduleName, commandName)) {
         return null;
       }
@@ -118,15 +120,21 @@ class CommandHandler {
     const commands = Array.from(this.client.commands.values()).map(command => {
       // Get the JSON data from the builder for API submission
       const jsonData = command.builder.toJSON();
-      
+
       // Log the permission information if available
       if (jsonData.default_member_permissions) {
-        const permName = this.getPermissionName(jsonData.default_member_permissions);
-        Logger.info(`Command "${jsonData.name}" requires permission: ${permName} (${jsonData.default_member_permissions})`);
+        const permName = this.getPermissionName(
+          jsonData.default_member_permissions
+        );
+        Logger.info(
+          `Command "${jsonData.name}" requires permission: ${permName} (${jsonData.default_member_permissions})`
+        );
       } else {
-        Logger.info(`Command "${jsonData.name}" has no permission restrictions`);
+        Logger.info(
+          `Command "${jsonData.name}" has no permission restrictions`
+        );
       }
-      
+
       return jsonData;
     });
 
@@ -137,13 +145,13 @@ class CommandHandler {
 
     try {
       Logger.info(`Registering ${commands.length} application commands`);
-      
+
       Logger.info("Clearing existing commands...");
       await rest.put(
         Routes.applicationGuildCommands(config.clientId, config.guildId),
         { body: [] }
       );
-      
+
       Logger.info("Registering updated commands...");
       await rest.put(
         Routes.applicationGuildCommands(config.clientId, config.guildId),

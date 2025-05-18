@@ -1,4 +1,8 @@
-import { CommandInteraction, version as discordJsVersion, SlashCommandBuilder } from "discord.js";
+import {
+  CommandInteraction,
+  version as discordJsVersion,
+  SlashCommandBuilder,
+} from "discord.js";
 import { DatabaseHandler } from "../../../core/index.js";
 import { Embed } from "../../../types/embed.js";
 import os from "os";

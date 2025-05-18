@@ -20,13 +20,13 @@ class AbmeldenCommand {
   public builder = new SlashCommandBuilder()
     .setName(this.name)
     .setDescription("Markiere dich als abwesend")
-    .addStringOption((option) =>
+    .addStringOption(option =>
       option
         .setName("zeit")
         .setDescription("Wie lange wirst du abwesend sein (Format: 1d2h3m4s)")
         .setRequired(true)
     )
-    .addStringOption((option) =>
+    .addStringOption(option =>
       option
         .setName("grund")
         .setDescription("Grund für deine Abwesenheit")
@@ -55,8 +55,13 @@ class AbmeldenCommand {
         return;
       }
 
-      const timeStr = (interaction.options as CommandInteractionOptionResolver).getString("zeit");
-      const reason = (interaction.options as CommandInteractionOptionResolver).getString("grund") || undefined;
+      const timeStr = (
+        interaction.options as CommandInteractionOptionResolver
+      ).getString("zeit");
+      const reason =
+        (interaction.options as CommandInteractionOptionResolver).getString(
+          "grund"
+        ) || undefined;
 
       if (!timeStr) {
         await interaction.reply({

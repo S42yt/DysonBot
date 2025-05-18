@@ -6,7 +6,7 @@ import {
   CommandInteraction,
   CommandInteractionOptionResolver,
   SlashCommandBuilder,
-  SlashCommandSubcommandsOnlyBuilder
+  SlashCommandSubcommandsOnlyBuilder,
 } from "discord.js";
 
 export interface SlashCommandOptions {
@@ -26,7 +26,10 @@ export interface CommandExecute {
 
 export interface Command {
   name: string;
-  builder: SlashCommandBuilder | SlashCommandSubcommandsOnlyBuilder | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">;
+  builder:
+    | SlashCommandBuilder
+    | SlashCommandSubcommandsOnlyBuilder
+    | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">;
   execute: CommandExecute;
   module: string;
 }

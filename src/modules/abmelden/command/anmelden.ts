@@ -1,7 +1,7 @@
-import { 
-  CommandInteraction, 
-  GuildMember, 
-  SlashCommandBuilder 
+import {
+  CommandInteraction,
+  GuildMember,
+  SlashCommandBuilder,
 } from "discord.js";
 import { Embed } from "../../../types/embed.js";
 import { MemberStatusModel } from "../schema/memberStatus.js";

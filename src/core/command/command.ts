@@ -1,4 +1,7 @@
-import { SlashCommandBuilder, SlashCommandSubcommandsOnlyBuilder } from "discord.js";
+import {
+  SlashCommandBuilder,
+  SlashCommandSubcommandsOnlyBuilder,
+} from "discord.js";
 import {
   Command as CommandInterface,
   CommandExecute,
@@ -10,7 +13,10 @@ class Command implements CommandInterface {
   public readonly execute: CommandExecute;
   public readonly module: string;
   public readonly name: string;
-  public readonly builder: SlashCommandBuilder | SlashCommandSubcommandsOnlyBuilder | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">;
+  public readonly builder:
+    | SlashCommandBuilder
+    | SlashCommandSubcommandsOnlyBuilder
+    | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">;
 
   constructor(
     options: SlashCommandOptions,

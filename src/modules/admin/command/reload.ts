@@ -18,7 +18,7 @@ class ReloadCommand {
     .setName(this.name)
     .setDescription("Reload all modules and optionally configuration")
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
-    .addBooleanOption((option) =>
+    .addBooleanOption(option =>
       option
         .setName("config")
         .setDescription("Whether to also reload the configuration")
@@ -26,7 +26,9 @@ class ReloadCommand {
     );
 
   public async execute(interaction: CommandInteraction): Promise<void> {
-    if (!interaction.memberPermissions?.has(PermissionFlagsBits.Administrator)) {
+    if (
+      !interaction.memberPermissions?.has(PermissionFlagsBits.Administrator)
+    ) {
       await interaction.reply({
         embeds: [
           Embed.error(
@@ -83,7 +85,7 @@ class ReloadCommand {
         );
       }
 
-      const hasErrors = results.some((result) => result.includes("⚠️"));
+      const hasErrors = results.some(result => result.includes("⚠️"));
 
       await interaction.editReply({
         embeds: [
