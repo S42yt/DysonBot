@@ -3,9 +3,17 @@ import { Event } from "../../../core/index.js";
 import { Embed } from "../../../types/embed.js";
 import Logger from "../../../utils/logger.js";
 import ConfigHandler from "../../../utils/configHandler.js";
-import { createCanvas, loadImage } from "canvas";
+import { createCanvas, loadImage, registerFont } from "canvas";
 import path from "path";
 import fs from "fs";
+
+const fontPath = path.join(process.cwd(), "assets", "Minecraft.ttf");
+try {
+  registerFont(fontPath, { family: "Minecraft" });
+  Logger.info("Minecraft font registered successfully");
+} catch (error) {
+  Logger.error(`Failed to register Minecraft font: ${error}`);
+}
 
 export default new Event(
   "guildMemberAdd",
@@ -126,7 +134,8 @@ async function generateWelcomeImage(member: GuildMember): Promise<Buffer> {
 
     ctx.restore();
 
-    ctx.font = "bold 50px Arial";
+    // Update font settings to use Minecraft font
+    ctx.font = "bold 40px Minecraft";
     ctx.fillStyle = "white";
     ctx.textAlign = "center";
     ctx.shadowColor = "rgba(0, 0, 0, 0.7)";
@@ -140,14 +149,14 @@ async function generateWelcomeImage(member: GuildMember): Promise<Buffer> {
       avatarY - 30
     );
 
-    ctx.font = "bold 40px Arial";
+    ctx.font = "bold 32px Minecraft"; 
     ctx.fillText(
       member.user.username,
       canvas.width / 2,
       avatarY + avatarSize + 60
     );
 
-    ctx.font = "bold 30px Arial";
+    ctx.font = "24px Minecraft"; 
     ctx.fillText(
       `Member #${member.guild.memberCount}`,
       canvas.width / 2,

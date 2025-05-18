@@ -30,8 +30,11 @@
       commands = {
         reload = true;
         say = true;
+        setup = true;
       };
-      events = { };
+      events = { 
+        memberCounter = true;
+      };
       env = { };
     },
     {
