@@ -4,6 +4,7 @@ import {
   CommandInteractionOptionResolver,
   SlashCommandBuilder,
   MessageFlags,
+  AttachmentBuilder,
 } from "discord.js";
 import { Embed } from "../../../types/embed.js";
 import Logger from "../../../utils/logger.js";
@@ -21,6 +22,12 @@ class SayCommand {
         .setName("message")
         .setDescription("The message to send")
         .setRequired(true)
+    )
+    .addAttachmentOption(option =>
+      option
+        .setName("image")
+        .setDescription("An image to send with the message")
+        .setRequired(false)
     );
 
   public async execute(interaction: CommandInteraction): Promise<void> {
@@ -42,6 +49,9 @@ class SayCommand {
     const message = (
       interaction.options as CommandInteractionOptionResolver
     ).getString("message");
+    const attachment = (
+      interaction.options as CommandInteractionOptionResolver
+    ).getAttachment("image");
 
     if (!message) {
       await interaction.reply({
@@ -87,11 +97,18 @@ class SayCommand {
     });
 
     try {
-      await channel.send(message);
+      if (attachment) {
+        const attachmentBuilder = new AttachmentBuilder(attachment.url, {
+          name: attachment.name,
+        });
+        await channel.send({ content: message, files: [attachmentBuilder] });
+      } else {
+        await channel.send(message);
+      }
 
       const channelName = "name" in channel ? channel.name : "unknown";
       Logger.info(
-        `Admin ${interaction.user.tag} used the say command in #${channelName} (${channel.id})`
+        `Admin ${interaction.user.tag} used the say command in #${channelName} (${channel.id})${attachment ? " with an image" : ""}`
       );
     } catch (error) {
       Logger.error("Error in say command:", error);
