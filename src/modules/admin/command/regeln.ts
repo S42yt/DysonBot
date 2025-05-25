@@ -17,7 +17,21 @@ class RegelnCommand {
   public builder = new SlashCommandBuilder()
     .setName(this.name)
     .setDescription("Sendet eine Embed-Nachricht mit den Serverregeln")
-    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+    .addStringOption(option =>
+      option
+        .setName("regel")
+        .setDescription("Wähle eine spezifische Regel")
+        .setRequired(false)
+        .addChoices(
+          { name: "Alle Regeln", value: "all" },
+          { name: "Regel 1 - Keine NSFW Inhalte", value: "1" },
+          { name: "Regel 2 - Kein Spammen", value: "2" },
+          { name: "Regel 3 - Sei kein Bastard", value: "3" },
+          { name: "Regel 4 - Seid nett zueinander", value: "4" },
+          { name: "Regel 5 - Discord ToS", value: "5" }
+        )
+    );
 
   public async execute(interaction: CommandInteraction): Promise<void> {
     if (
@@ -72,50 +86,85 @@ class RegelnCommand {
         return;
       }
 
+      const selectedRule = interaction.options.get("regel")?.value as string || "all";
       const targetUser = await interaction.client.users
         .fetch("777516207984607273")
         .catch(() => null);
 
-      const imagePath = path.join(process.cwd(), "assets", "regeln.gif");
+      const rules = {
+        "1": { name: "Regel 1", value: "- Keine NSFW Inhalte in jeglicher Form :angry:" },
+        "2": { name: "Regel 2", value: "- Spammen ist auch uncool :broken_heart:" },
+        "3": { name: "Regel 3", value: "- Sei kein Bastard :thumbsup:" },
+        "4": { name: "Regel 4", value: "- Seid nett zueinander :smiling_face_with_3_hearts:" },
+        "5": { name: "Regel 5", value: "- Haltet euch an die Discord ToS uwu" }
+      };
 
-      if (!fs.existsSync(imagePath)) {
-        Logger.error(`Image not found at ${imagePath}`);
-        await interaction.editReply({
-          embeds: [
-            Embed.error("Rules image not found in assets folder", "Error"),
-          ],
+      let rulesEmbed: Embed;
+
+      if (selectedRule === "all") {
+        const imagePath = path.join(process.cwd(), "assets", "regeln.gif");
+
+        if (!fs.existsSync(imagePath)) {
+          Logger.error(`Image not found at ${imagePath}`);
+          await interaction.editReply({
+            embeds: [
+              Embed.error("Rules image not found in assets folder", "Error"),
+            ],
+          });
+          return;
+        }
+
+        const attachment = new AttachmentBuilder(imagePath, {
+          name: "regeln.gif",
         });
-        return;
+
+        rulesEmbed = new Embed({
+          title: "Dyson Discord Regeln :sparkles:",
+          color: "#EB94E3",
+          thumbnail: guild.iconURL({ size: 256 }) ?? undefined,
+          image: "attachment://regeln.gif",
+          footer: {
+            text: targetUser ? targetUser.username : "Dyson Clan",
+            iconURL: targetUser
+              ? targetUser.displayAvatarURL({ size: 128 })
+              : undefined,
+          },
+          timestamp: true,
+        })
+        .addFields(
+          ...Object.values(rules).map(rule => ({ ...rule, inline: false })),
+          { name: "", value: "Oki das wars >w<", inline: false }
+        );
+
+        const messagePayload = rulesEmbed.toMessagePayload();
+
+        await channel.send({
+          ...messagePayload,
+          files: [attachment],
+        });
+      } else {
+        const rule = rules[selectedRule as keyof typeof rules];
+        
+        rulesEmbed = new Embed({
+          title: `${rule.name} :sparkles:`,
+          description: rule.value,
+          color: "#EB94E3",
+          thumbnail: guild.iconURL({ size: 256 }) ?? undefined,
+          footer: {
+            text: targetUser ? targetUser.username : "Dyson Clan",
+            iconURL: targetUser
+              ? targetUser.displayAvatarURL({ size: 128 })
+              : undefined,
+          },
+          timestamp: true,
+        });
+
+        const messagePayload = rulesEmbed.toMessagePayload();
+
+        await channel.send({
+          ...messagePayload,
+        });
       }
-
-      const attachment = new AttachmentBuilder(imagePath, {
-        name: "regeln.gif",
-      });
-
-      const rulesEmbed = new Embed({
-        title: "Dyson Discord Regeln :sparkles:",
-        description:
-          "- 1. Keine NSFW inhalte in jeglicher form :angry: \n\n" +
-          "- 2. Spammen ist auch uncool :broken_heart:\n\n" +
-          "- 3. Sei kein bastard :thumbsup:\n\n" +
-          "- 4. Seit nett zueinander :smiling_face_with_3_hearts:\n\n" +
-          "- 5. Halt dich an die Discord ToS uwu\n\n" +
-          "Oki das wars >w<",
-        color: "#EB94E3",
-        thumbnail: guild.iconURL({ size: 256 }) ?? undefined,
-        image: "attachment://regeln.gif",
-        footer: {
-          text: targetUser ? targetUser.username : "Dyson Clan",
-          iconURL: targetUser
-            ? targetUser.displayAvatarURL({ size: 128 })
-            : undefined,
-        },
-      });
-
-      await channel.send({
-        embeds: [rulesEmbed],
-        files: [attachment],
-      });
 
       await interaction.editReply({
         embeds: [Embed.success("Rules message has been sent", "Success")],
@@ -123,7 +172,7 @@ class RegelnCommand {
 
       const channelName = "name" in channel ? channel.name : "unknown";
       Logger.info(
-        `Admin ${interaction.user.tag} used the regeln command in #${channelName} (${channel.id})`
+        `Admin ${interaction.user.tag} used the regeln command in #${channelName} (${channel.id}) - Rule: ${selectedRule}`
       );
     } catch (error) {
       Logger.error("Error in regeln command:", error);
