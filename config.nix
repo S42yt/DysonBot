@@ -31,6 +31,8 @@
         reload = true;
         say = true;
         setup = true;
+        join = true;
+        leave = true;
       };
       events = { 
         memberCounter = true;

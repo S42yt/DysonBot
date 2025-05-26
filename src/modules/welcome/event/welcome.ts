@@ -149,14 +149,14 @@ async function generateWelcomeImage(member: GuildMember): Promise<Buffer> {
       avatarY - 30
     );
 
-    ctx.font = "bold 32px Minecraft"; 
+    ctx.font = "bold 32px Minecraft";
     ctx.fillText(
       member.user.username,
       canvas.width / 2,
       avatarY + avatarSize + 60
     );
 
-    ctx.font = "24px Minecraft"; 
+    ctx.font = "24px Minecraft";
     ctx.fillText(
       `Member #${member.guild.memberCount}`,
       canvas.width / 2,

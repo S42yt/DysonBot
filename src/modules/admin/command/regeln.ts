@@ -86,17 +86,27 @@ class RegelnCommand {
         return;
       }
 
-      const selectedRule = interaction.options.get("regel")?.value as string || "all";
+      const selectedRule =
+        (interaction.options.get("regel")?.value as string) || "all";
       const targetUser = await interaction.client.users
         .fetch("777516207984607273")
         .catch(() => null);
 
       const rules = {
-        "1": { name: "Regel 1", value: "- Keine NSFW Inhalte in jeglicher Form :angry:" },
-        "2": { name: "Regel 2", value: "- Spammen ist auch uncool :broken_heart:" },
+        "1": {
+          name: "Regel 1",
+          value: "- Keine NSFW Inhalte in jeglicher Form :angry:",
+        },
+        "2": {
+          name: "Regel 2",
+          value: "- Spammen ist auch uncool :broken_heart:",
+        },
         "3": { name: "Regel 3", value: "- Sei kein Bastard :thumbsup:" },
-        "4": { name: "Regel 4", value: "- Seid nett zueinander :smiling_face_with_3_hearts:" },
-        "5": { name: "Regel 5", value: "- Haltet euch an die Discord ToS uwu" }
+        "4": {
+          name: "Regel 4",
+          value: "- Seid nett zueinander :smiling_face_with_3_hearts:",
+        },
+        "5": { name: "Regel 5", value: "- Haltet euch an die Discord ToS uwu" },
       };
 
       let rulesEmbed: Embed;
@@ -130,8 +140,7 @@ class RegelnCommand {
               : undefined,
           },
           timestamp: true,
-        })
-        .addFields(
+        }).addFields(
           ...Object.values(rules).map(rule => ({ ...rule, inline: false })),
           { name: "", value: "Oki das wars >w<", inline: false }
         );
@@ -144,7 +153,7 @@ class RegelnCommand {
         });
       } else {
         const rule = rules[selectedRule as keyof typeof rules];
-        
+
         rulesEmbed = new Embed({
           title: `${rule.name} :sparkles:`,
           description: rule.value,

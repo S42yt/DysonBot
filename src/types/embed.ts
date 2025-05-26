@@ -81,7 +81,7 @@ export class ComponentContainer {
 
   addButton(options: ButtonOptions): this {
     const button = new ButtonBuilder();
-    
+
     if (options.customId) button.setCustomId(options.customId);
     if (options.label) button.setLabel(options.label);
     if (options.emoji) button.setEmoji(options.emoji);
@@ -94,66 +94,90 @@ export class ComponentContainer {
   }
 
   addStringSelectMenu(options: SelectMenuOptions): this {
-    const selectMenu = new StringSelectMenuBuilder()
-      .setCustomId(options.customId);
-    
+    const selectMenu = new StringSelectMenuBuilder().setCustomId(
+      options.customId
+    );
+
     if (options.placeholder) selectMenu.setPlaceholder(options.placeholder);
-    if (options.minValues !== undefined) selectMenu.setMinValues(options.minValues);
-    if (options.maxValues !== undefined) selectMenu.setMaxValues(options.maxValues);
-    if (options.disabled !== undefined) selectMenu.setDisabled(options.disabled);
+    if (options.minValues !== undefined)
+      selectMenu.setMinValues(options.minValues);
+    if (options.maxValues !== undefined)
+      selectMenu.setMaxValues(options.maxValues);
+    if (options.disabled !== undefined)
+      selectMenu.setDisabled(options.disabled);
     if (options.options) selectMenu.addOptions(options.options);
 
     this.addComponent(selectMenu);
     return this;
   }
 
-  addUserSelectMenu(customId: string, options?: Omit<SelectMenuOptions, "customId">): this {
-    const selectMenu = new UserSelectMenuBuilder()
-      .setCustomId(customId);
-    
+  addUserSelectMenu(
+    customId: string,
+    options?: Omit<SelectMenuOptions, "customId">
+  ): this {
+    const selectMenu = new UserSelectMenuBuilder().setCustomId(customId);
+
     if (options?.placeholder) selectMenu.setPlaceholder(options.placeholder);
-    if (options?.minValues !== undefined) selectMenu.setMinValues(options.minValues);
-    if (options?.maxValues !== undefined) selectMenu.setMaxValues(options.maxValues);
-    if (options?.disabled !== undefined) selectMenu.setDisabled(options.disabled);
+    if (options?.minValues !== undefined)
+      selectMenu.setMinValues(options.minValues);
+    if (options?.maxValues !== undefined)
+      selectMenu.setMaxValues(options.maxValues);
+    if (options?.disabled !== undefined)
+      selectMenu.setDisabled(options.disabled);
 
     this.addComponent(selectMenu);
     return this;
   }
 
-  addRoleSelectMenu(customId: string, options?: Omit<SelectMenuOptions, "customId">): this {
-    const selectMenu = new RoleSelectMenuBuilder()
-      .setCustomId(customId);
-    
+  addRoleSelectMenu(
+    customId: string,
+    options?: Omit<SelectMenuOptions, "customId">
+  ): this {
+    const selectMenu = new RoleSelectMenuBuilder().setCustomId(customId);
+
     if (options?.placeholder) selectMenu.setPlaceholder(options.placeholder);
-    if (options?.minValues !== undefined) selectMenu.setMinValues(options.minValues);
-    if (options?.maxValues !== undefined) selectMenu.setMaxValues(options.maxValues);
-    if (options?.disabled !== undefined) selectMenu.setDisabled(options.disabled);
+    if (options?.minValues !== undefined)
+      selectMenu.setMinValues(options.minValues);
+    if (options?.maxValues !== undefined)
+      selectMenu.setMaxValues(options.maxValues);
+    if (options?.disabled !== undefined)
+      selectMenu.setDisabled(options.disabled);
 
     this.addComponent(selectMenu);
     return this;
   }
 
-  addChannelSelectMenu(customId: string, options?: Omit<SelectMenuOptions, "customId">): this {
-    const selectMenu = new ChannelSelectMenuBuilder()
-      .setCustomId(customId);
-    
+  addChannelSelectMenu(
+    customId: string,
+    options?: Omit<SelectMenuOptions, "customId">
+  ): this {
+    const selectMenu = new ChannelSelectMenuBuilder().setCustomId(customId);
+
     if (options?.placeholder) selectMenu.setPlaceholder(options.placeholder);
-    if (options?.minValues !== undefined) selectMenu.setMinValues(options.minValues);
-    if (options?.maxValues !== undefined) selectMenu.setMaxValues(options.maxValues);
-    if (options?.disabled !== undefined) selectMenu.setDisabled(options.disabled);
+    if (options?.minValues !== undefined)
+      selectMenu.setMinValues(options.minValues);
+    if (options?.maxValues !== undefined)
+      selectMenu.setMaxValues(options.maxValues);
+    if (options?.disabled !== undefined)
+      selectMenu.setDisabled(options.disabled);
 
     this.addComponent(selectMenu);
     return this;
   }
 
-  addMentionableSelectMenu(customId: string, options?: Omit<SelectMenuOptions, "customId">): this {
-    const selectMenu = new MentionableSelectMenuBuilder()
-      .setCustomId(customId);
-    
+  addMentionableSelectMenu(
+    customId: string,
+    options?: Omit<SelectMenuOptions, "customId">
+  ): this {
+    const selectMenu = new MentionableSelectMenuBuilder().setCustomId(customId);
+
     if (options?.placeholder) selectMenu.setPlaceholder(options.placeholder);
-    if (options?.minValues !== undefined) selectMenu.setMinValues(options.minValues);
-    if (options?.maxValues !== undefined) selectMenu.setMaxValues(options.maxValues);
-    if (options?.disabled !== undefined) selectMenu.setDisabled(options.disabled);
+    if (options?.minValues !== undefined)
+      selectMenu.setMinValues(options.minValues);
+    if (options?.maxValues !== undefined)
+      selectMenu.setMaxValues(options.maxValues);
+    if (options?.disabled !== undefined)
+      selectMenu.setDisabled(options.disabled);
 
     this.addComponent(selectMenu);
     return this;
@@ -163,13 +187,15 @@ export class ComponentContainer {
     const textInput = new TextInputBuilder()
       .setCustomId(options.customId)
       .setLabel(options.label);
-    
+
     if (options.style !== undefined) textInput.setStyle(options.style);
     if (options.placeholder) textInput.setPlaceholder(options.placeholder);
     if (options.value) textInput.setValue(options.value);
     if (options.required !== undefined) textInput.setRequired(options.required);
-    if (options.minLength !== undefined) textInput.setMinLength(options.minLength);
-    if (options.maxLength !== undefined) textInput.setMaxLength(options.maxLength);
+    if (options.minLength !== undefined)
+      textInput.setMinLength(options.minLength);
+    if (options.maxLength !== undefined)
+      textInput.setMaxLength(options.maxLength);
 
     this.addComponent(textInput as unknown as MessageActionRowComponentBuilder);
     return this;
@@ -178,9 +204,10 @@ export class ComponentContainer {
   private addComponent(component: MessageActionRowComponentBuilder): void {
     // Find the last action row or create a new one
     let lastRow = this.components[this.components.length - 1];
-    
+
     // Check if we need a new row (max 5 buttons per row, 1 select menu per row)
-    const needsNewRow = !lastRow || 
+    const needsNewRow =
+      !lastRow ||
       (component instanceof ButtonBuilder && lastRow.components.length >= 5) ||
       (!(component instanceof ButtonBuilder) && lastRow.components.length > 0);
 
@@ -192,7 +219,9 @@ export class ComponentContainer {
     lastRow.addComponents(component);
   }
 
-  addActionRow(actionRow: ActionRowBuilder<MessageActionRowComponentBuilder>): this {
+  addActionRow(
+    actionRow: ActionRowBuilder<MessageActionRowComponentBuilder>
+  ): this {
     this.components.push(actionRow);
     return this;
   }
@@ -214,25 +243,31 @@ export class ModalContainer {
     const textInput = new TextInputBuilder()
       .setCustomId(options.customId)
       .setLabel(options.label);
-    
+
     if (options.style !== undefined) textInput.setStyle(options.style);
     if (options.placeholder) textInput.setPlaceholder(options.placeholder);
     if (options.value) textInput.setValue(options.value);
     if (options.required !== undefined) textInput.setRequired(options.required);
-    if (options.minLength !== undefined) textInput.setMinLength(options.minLength);
-    if (options.maxLength !== undefined) textInput.setMaxLength(options.maxLength);
+    if (options.minLength !== undefined)
+      textInput.setMinLength(options.minLength);
+    if (options.maxLength !== undefined)
+      textInput.setMaxLength(options.maxLength);
 
     this.addComponent(textInput);
     return this;
   }
 
   private addComponent(component: ModalActionRowComponentBuilder): void {
-    const actionRow = new ActionRowBuilder<ModalActionRowComponentBuilder>()
-      .addComponents(component);
+    const actionRow =
+      new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
+        component
+      );
     this.components.push(actionRow);
   }
 
-  addActionRow(actionRow: ActionRowBuilder<ModalActionRowComponentBuilder>): this {
+  addActionRow(
+    actionRow: ActionRowBuilder<ModalActionRowComponentBuilder>
+  ): this {
     this.components.push(actionRow);
     return this;
   }
@@ -286,12 +321,16 @@ export class Embed extends EmbedBuilder {
     }
   }
 
-  setComponents(components: ActionRowBuilder<MessageActionRowComponentBuilder>[]): this {
+  setComponents(
+    components: ActionRowBuilder<MessageActionRowComponentBuilder>[]
+  ): this {
     this.components = components;
     return this;
   }
 
-  addActionRow(actionRow: ActionRowBuilder<MessageActionRowComponentBuilder>): this {
+  addActionRow(
+    actionRow: ActionRowBuilder<MessageActionRowComponentBuilder>
+  ): this {
     if (!this.components) {
       this.components = [];
     }
@@ -312,25 +351,37 @@ export class Embed extends EmbedBuilder {
     return this;
   }
 
-  addUserSelectMenu(customId: string, options?: Omit<SelectMenuOptions, "customId">): this {
+  addUserSelectMenu(
+    customId: string,
+    options?: Omit<SelectMenuOptions, "customId">
+  ): this {
     this.container.addUserSelectMenu(customId, options);
     this.components = this.container.getComponents();
     return this;
   }
 
-  addRoleSelectMenu(customId: string, options?: Omit<SelectMenuOptions, "customId">): this {
+  addRoleSelectMenu(
+    customId: string,
+    options?: Omit<SelectMenuOptions, "customId">
+  ): this {
     this.container.addRoleSelectMenu(customId, options);
     this.components = this.container.getComponents();
     return this;
   }
 
-  addChannelSelectMenu(customId: string, options?: Omit<SelectMenuOptions, "customId">): this {
+  addChannelSelectMenu(
+    customId: string,
+    options?: Omit<SelectMenuOptions, "customId">
+  ): this {
     this.container.addChannelSelectMenu(customId, options);
     this.components = this.container.getComponents();
     return this;
   }
 
-  addMentionableSelectMenu(customId: string, options?: Omit<SelectMenuOptions, "customId">): this {
+  addMentionableSelectMenu(
+    customId: string,
+    options?: Omit<SelectMenuOptions, "customId">
+  ): this {
     this.container.addMentionableSelectMenu(customId, options);
     this.components = this.container.getComponents();
     return this;
@@ -349,9 +400,7 @@ export class Embed extends EmbedBuilder {
   }
 
   createModal(customId: string, title: string): ModalBuilder {
-    const modal = new ModalBuilder()
-      .setCustomId(customId)
-      .setTitle(title);
+    const modal = new ModalBuilder().setCustomId(customId).setTitle(title);
 
     // Add text inputs from modal container if any
     const components = this.modalContainer.getComponents();
