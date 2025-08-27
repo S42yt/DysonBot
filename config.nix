@@ -37,7 +37,9 @@
       events = { 
         memberCounter = true;
       };
-      env = { };
+      env = {
+        goonRealTimeRole = "$GOON_REAL_TIME_ROLE";
+       };
     },
     {
       name = "abmelden";
@@ -99,6 +101,24 @@
       };
       env = {
         logChannel = "$LOG_CHANNEL";
+      };
+    },
+    {
+      name = "goonreal";
+      enabled = true;
+      commands = {
+        streak = true;
+        quotes = true;
+        adminStreak = true;
+        adminQuotes = true;
+        admindailytrigger = true;
+      };
+      events = {
+        dailyGoon = true;
+      };
+      env = {
+        goonRealTimeRole = "$GOON_REAL_TIME_ROLE";
+        goonRealTimeChannel = "$GOON_REAL_TIME_CHANNEL";
       };
     }
   ];

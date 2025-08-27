@@ -202,10 +202,8 @@ export class ComponentContainer {
   }
 
   private addComponent(component: MessageActionRowComponentBuilder): void {
-    // Find the last action row or create a new one
     let lastRow = this.components[this.components.length - 1];
 
-    // Check if we need a new row (max 5 buttons per row, 1 select menu per row)
     const needsNewRow =
       !lastRow ||
       (component instanceof ButtonBuilder && lastRow.components.length >= 5) ||
@@ -338,7 +336,6 @@ export class Embed extends EmbedBuilder {
     return this;
   }
 
-  // Convenience methods for adding components via container
   addButton(options: ButtonOptions): this {
     this.container.addButton(options);
     this.components = this.container.getComponents();

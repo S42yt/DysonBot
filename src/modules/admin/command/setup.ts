@@ -4,6 +4,7 @@ import {
   SlashCommandBuilder,
   ChannelType,
   MessageFlags,
+  ButtonStyle,
 } from "discord.js";
 import { Embed } from "../../../types/embed.js";
 import Logger from "../../../utils/logger.js";
@@ -30,7 +31,15 @@ class SetupCommand {
             )
             .setRequired(false)
         )
+    )
+    .addSubcommand(subcommand =>
+      subcommand
+        .setName("goonrealembed")
+        .setDescription(
+          "Send an embed to let users get/remove the goonRealTimeRole"
+        )
     );
+
   public async execute(
     interaction: ChatInputCommandInteraction
   ): Promise<void> {
@@ -63,8 +72,11 @@ class SetupCommand {
 
     if (subcommand === "counterchannel") {
       await this.setupCounterChannel(interaction);
+    } else if (subcommand === "goonrealembed") {
+      await this.sendGoonRealEmbed(interaction);
     }
   }
+
   private async setupCounterChannel(
     interaction: ChatInputCommandInteraction
   ): Promise<void> {
@@ -96,10 +108,8 @@ class SetupCommand {
         ],
       });
 
-      // Save configuration directly to MongoDB
       await CounterModel.createOrUpdateCounter(guild.id, channel.id, format);
 
-      // Update environment variables only as a fallback
       const configHandler = ConfigHandler.getInstance();
       const moduleEnv = configHandler.getModuleEnv("admin");
       if (moduleEnv && typeof moduleEnv === "object") {
@@ -130,6 +140,71 @@ class SetupCommand {
         ],
       });
     }
+  }
+
+  private async sendGoonRealEmbed(
+    interaction: ChatInputCommandInteraction
+  ): Promise<void> {
+    await interaction.deferReply();
+
+    const configHandler = ConfigHandler.getInstance();
+    const moduleEnv = configHandler.getModuleEnv("admin");
+    const goonRealTimeRole = moduleEnv?.goonRealTimeRole;
+
+    if (!goonRealTimeRole) {
+      await interaction.editReply({
+        embeds: [
+          Embed.error(
+            "The goonRealTimeRole environment variable is not set in the config.",
+            "Missing Role"
+          ),
+        ],
+      });
+      return;
+    }
+
+    let footerUser;
+    try {
+      footerUser = await interaction.client.users.fetch("777516207984607273");
+    } catch {
+      footerUser = null;
+    }
+
+    const embed = new Embed({
+      title: "Goon Real Time Rolle",
+      description:
+        "Drücke auf **Rolle erhalten** um die Goon Real Time Rolle zu bekommen, oder auf **Rolle entfernen** um sie zu entfernen.",
+      color: "#db3dff",
+      thumbnail: "attachment://john_pork.webp",
+      footer: footerUser
+        ? {
+            text: footerUser.displayName,
+            iconURL: footerUser.displayAvatarURL(),
+          }
+        : undefined,
+    });
+
+    embed
+      .addButton({
+        customId: "goonreal_get",
+        label: "Rolle erhalten",
+        style: ButtonStyle.Success,
+      })
+      .addButton({
+        customId: "goonreal_remove",
+        label: "Rolle entfernen",
+        style: ButtonStyle.Danger,
+      });
+
+    await interaction.editReply({
+      ...embed.toMessagePayload(),
+      files: [
+        {
+          attachment: `${process.cwd()}/assets/john_pork.webp`,
+          name: "john_pork.webp",
+        },
+      ],
+    });
   }
 }
 
