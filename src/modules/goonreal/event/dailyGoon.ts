@@ -39,7 +39,10 @@ async function getRandomMemeThumbnail(): Promise<string | undefined> {
     const res = await fetch("https://meme-api.com/gimme");
     if (!res.ok) return undefined;
     const data = await res.json();
-    return typeof data.url === "string" ? data.url : undefined;
+    if (typeof data === "object" && data !== null && "url" in data && typeof (data as any).url === "string") {
+      return (data as any).url;
+    }
+    return undefined;
   } catch (e) {
     Logger.error("Failed to fetch meme thumbnail:", e);
     return undefined;
