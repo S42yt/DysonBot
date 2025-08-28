@@ -5,7 +5,8 @@ import {
 } from "discord.js";
 import { Embed } from "../../../types/embed.js";
 import Logger from "../../../utils/logger.js";
-import { sendDailyGoonReminder, scheduleNextGoon } from "../event/dailyGoon.js";
+import { sendDailyGoonReminder } from "../event/dailyGoon.js";
+import DailyGoonLog from "../schema/dailyGoonLog.js";
 
 class AdminDailyTriggerCommand {
   public readonly name = "admindailytrigger";
@@ -14,7 +15,7 @@ class AdminDailyTriggerCommand {
   public builder = new SlashCommandBuilder()
     .setName(this.name)
     .setDescription(
-      "Manually trigger the daily goon reminder event and reset timer (Admin)"
+      "Manually trigger the daily goon reminder (Admin)"
     )
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
 
@@ -52,8 +53,30 @@ class AdminDailyTriggerCommand {
     try {
       await interaction.deferReply({ ephemeral: true });
 
-      const success = await sendDailyGoonReminder(interaction.client);
+      const alreadySent = await DailyGoonLog.hasBeenSentToday(interaction.guild.id);
+      if (alreadySent) {
+        const todaysLog = await DailyGoonLog.getTodaysLog(interaction.guild.id);
+        await interaction.editReply({
+          embeds: [
+            Embed.warning(
+              `Daily Goon Reminder wurde heute bereits gesendet!\n\n` +
+              `**Gesendet um:** ${todaysLog?.sentAt.toLocaleString()}\n` +
+              `**Ausgelöst durch:** ${todaysLog?.triggeredBy === "manual" ? "Admin" : "Automatisch"}` +
+              (todaysLog?.adminUserId ? `\n**Admin:** <@${todaysLog.adminUserId}>` : ""),
+              "Bereits gesendet"
+            ),
+          ],
+        });
+        return;
+      }
 
+      const success = await sendDailyGoonReminder(
+        interaction.client, 
+        interaction.guild.id, 
+        "manual", 
+        interaction.user.id
+      );
+      
       if (!success) {
         await interaction.editReply({
           embeds: [
@@ -66,19 +89,19 @@ class AdminDailyTriggerCommand {
         return;
       }
 
-      await scheduleNextGoon(interaction.client);
-
       await interaction.editReply({
         embeds: [
           Embed.success(
-            "Das Daily Goon Reminder wurde erfolgreich gesendet und der Timer neu gesetzt.",
-            "Event ausgelöst"
+            "Das Daily Goon Reminder wurde erfolgreich gesendet!\n\n" +
+            "**Info:** Der automatische Reminder für heute wurde dadurch deaktiviert. " +
+            "Morgen wird wieder automatisch ein Reminder geplant.",
+            "Manual ausgelöst"
           ),
         ],
       });
 
       Logger.info(
-        `Daily goon reminder manually sent and rescheduled by ${interaction.user.tag} in guild ${interaction.guild.name}.`
+        `Daily goon reminder manually triggered by ${interaction.user.tag} in guild ${interaction.guild.name}`
       );
     } catch (error) {
       Logger.error("Error in admin daily trigger command:", error);

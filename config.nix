@@ -107,11 +107,12 @@
       name = "goonreal";
       enabled = true;
       commands = {
-        streak = true;
-        quotes = true;
-        adminStreak = true;
-        adminQuotes = true;
+        goonstreak = true;
+        goonquotes = true;
+        admingoonstreak = true;
+        admingoonquotes = true;
         admindailytrigger = true;
+        admindailystatus = true;
       };
       events = {
         dailyGoon = true;
